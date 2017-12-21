@@ -46,7 +46,7 @@ export function getTargetData(element) {
     data.push(serialize(target, {hash: true}));
   }
 
-  return merge(...data);
+  return Object.assign(...data);
 }
 
 export function sendMsg(action, data) {
