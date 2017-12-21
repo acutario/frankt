@@ -1,14 +1,14 @@
-import {Socket}  from "phoenix";
+import $ from "jquery";
+import {Socket} from "phoenix";
 import serialize from "form-serialize";
-// import * as Modal from "services/modal";
 
 const channelName = document.querySelector("meta[name=channel]").getAttribute("content");
 const userToken = document.querySelector("meta[name=user_token]").getAttribute("content");
 const tenantToken = document.querySelector("meta[name=tenant_token]").getAttribute("content");
 const locale = document.querySelector('html').getAttribute('lang');
 const socket = new Socket("/socket", { params: {user_token: userToken, tenant_token: tenantToken, locale: locale} });
-const frankt = socket.channel(channelName, {});
 const form_tpl = $('<form><input type="hidden"/></form>');
+export const channel = socket.channel(channelName, {});
 
 function needValidation(element, target) {
   if (element.dataset.franktNoValidate !== undefined) return false;
@@ -49,8 +49,8 @@ export function getTargetData(element) {
 }
 
 export function sendMsg(action, data) {
-  if (frankt.state === 'closed') init(true);
-  return frankt.push(action, data);
+  if (channel.state === 'closed') init(true);
+  return channel.push(action, data);
 }
 
 function handleEvent(e) {
@@ -68,29 +68,15 @@ function handleAutoEvent(e) {
   if (value.length === 0 || value.length >= 2) handleEvent(e);
 }
 
-function attachResponses(frankt) {
-  frankt.on("redirect", (res) => window.location = res.target);
-  frankt.on("replace_with", (res) => {
-    $(res.target).replaceWith(res.html);
-    $(res.target).trigger('dom-update');
-  });
-  frankt.on("mod_class", (res) => {
+function attachResponses() {
+  channel.on("redirect", (res) => window.location = res.target);
+  channel.on("replace_with", (res) => $(res.target).replaceWith(res.html));
+  channel.on("prepend", (res) => $(res.target).prepend(res.html));
+  channel.on("append", (res) => $(res.target).append(res.html));
+  channel.on("mod_class", (res) => {
     for (const element of document.querySelectorAll(res.target)) {
       element.classList[res.action](res.klass);
     }
-  });
-  // frankt.on("open_modal", (res) => Modal.open(res.html));
-  // frankt.on("close_modal", (res) => Modal.close());
-  frankt.on("prepend", (res) => {
-    $(res.target).prepend(res.html);
-    $(res.target).trigger('dom-update');
-  });
-  frankt.on("append", (res) => {
-    $(res.target).append(res.html);
-    $(res.target).trigger('dom-update');
-  });
-  frankt.on("notification_watcher", () => {
-    sendMsg("notification_watcher");
   });
 }
 
@@ -102,10 +88,9 @@ export function init(force = false) {
   $(document).on("keyup", "input[data-frankt-auto]", handleAutoEvent);
 
   socket.connect();
-  return frankt.join()
+  return channel.join()
     .receive("ok", res => {
-      attachResponses(frankt);
-      sendMsg("notification_watcher");
+      attachResponses();
       console.log("Connected to Frankt");
     })
     .receive("error", res => console.log("Unable to connect to Frankt", res));
