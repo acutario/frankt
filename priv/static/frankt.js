@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import {Socket}  from "phoenix";
 import serialize from "form-serialize";
 // import * as Modal from "services/modal";
@@ -8,11 +7,11 @@ const userToken = document.querySelector("meta[name=user_token]").getAttribute("
 const tenantToken = document.querySelector("meta[name=tenant_token]").getAttribute("content");
 const locale = document.querySelector('html').getAttribute('lang');
 const socket = new Socket("/socket", { params: {user_token: userToken, tenant_token: tenantToken, locale: locale} });
-const frankenstein = socket.channel(channelName, {});
+const frankt = socket.channel(channelName, {});
 const form_tpl = $('<form><input type="hidden"/></form>');
 
 function needValidation(element, target) {
-  if (element.dataset.frankensteinNoValidate !== undefined) return false;
+  if (element.dataset.franktNoValidate !== undefined) return false;
   return target.nodeName === "FORM" && !target.checkValidity();
 }
 
@@ -31,8 +30,8 @@ export function getTargetData(element) {
     data.push(generateFakeInput(element.name, element.value));
   }
 
-  if (element.dataset.frankensteinTarget) {
-    const target = document.querySelector(element.dataset.frankensteinTarget);
+  if (element.dataset.franktTarget) {
+    const target = document.querySelector(element.dataset.franktTarget);
 
     // Block submit form on enter
     $(target).on('submit', (e) => {
@@ -50,15 +49,15 @@ export function getTargetData(element) {
 }
 
 export function sendMsg(action, data) {
-  if (frankenstein.state === 'closed') init(true);
-  return frankenstein.push(action, data);
+  if (frankt.state === 'closed') init(true);
+  return frankt.push(action, data);
 }
 
 function handleEvent(e) {
   const target = e.currentTarget;
   const data = getTargetData(target);
   e.preventDefault();
-  if (data) sendMsg(target.dataset.frankensteinAction, data);
+  if (data) sendMsg(target.dataset.franktAction, data);
   return false;
 }
 
@@ -69,48 +68,52 @@ function handleAutoEvent(e) {
   if (value.length === 0 || value.length >= 2) handleEvent(e);
 }
 
-function attachResponses(frankenstein) {
-  frankenstein.on("redirect", (res) => window.location = res.target);
-  frankenstein.on("replace_with", (res) => {
+function attachResponses(frankt) {
+  frankt.on("redirect", (res) => window.location = res.target);
+  frankt.on("replace_with", (res) => {
     $(res.target).replaceWith(res.html);
+    console.log("Replace with");
+    console.log(res.target);
+    // debugger
     $(res.target).trigger('dom-update');
   });
-  frankenstein.on("mod_class", (res) => {
+  frankt.on("mod_class", (res) => {
     for (const element of document.querySelectorAll(res.target)) {
       element.classList[res.action](res.klass);
     }
   });
-  frankenstein.on("open_modal", (res) => Modal.open(res.html));
-  frankenstein.on("close_modal", (res) => Modal.close());
-  frankenstein.on("prepend", (res) => {
+  // frankt.on("open_modal", (res) => Modal.open(res.html));
+  // frankt.on("close_modal", (res) => Modal.close());
+  frankt.on("prepend", (res) => {
+    console.log("prepend");
     $(res.target).prepend(res.html);
     $(res.target).trigger('dom-update');
   });
-  frankenstein.on("append", (res) => {
+  frankt.on("append", (res) => {
+    console.log("append");
     $(res.target).append(res.html);
     $(res.target).trigger('dom-update');
   });
-  frankenstein.on("notification_watcher", () => {
+  frankt.on("notification_watcher", () => {
     sendMsg("notification_watcher");
   });
 }
 
-// Connect to the socket and join the Frankenstein channel (only if there are
-// Frankenstein elements in the DOM).
+// Connect to the socket and join the Frankt channel (only if there are
+// Frankt elements in the DOM).
 export function init(force = false) {
-  $(document).on("submit change click", "[data-frankenstein-action]:not(input)", handleEvent);
-  $(document).on("change", "input[data-frankenstein-action]", handleEvent);
-  $(document).on("keyup", "input[data-frankenstein-auto]", handleAutoEvent);
+  $(document).on("submit change click", "[data-frankt-action]:not(input)", handleEvent);
+  $(document).on("change", "input[data-frankt-action]", handleEvent);
+  $(document).on("keyup", "input[data-frankt-auto]", handleAutoEvent);
 
   socket.connect();
-  return frankenstein.join()
+  return frankt.join()
     .receive("ok", res => {
-      attachResponses(frankenstein);
-      console.log("Connected to Frankenstein");
+      attachResponses(frankt);
+      sendMsg("notification_watcher");
+      console.log("Connected to Frankt");
     })
-    .receive("error", res => console.log("Unable to connect to Frankenstein", res));
-
-  sendMsg("notification_watcher");
+    .receive("error", res => console.log("Unable to connect to Frankt", res));
 }
 
 // export default $(() => init());
