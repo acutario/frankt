@@ -72,9 +72,6 @@ function attachResponses(frankt) {
   frankt.on("redirect", (res) => window.location = res.target);
   frankt.on("replace_with", (res) => {
     $(res.target).replaceWith(res.html);
-    console.log("Replace with");
-    console.log(res.target);
-    // debugger
     $(res.target).trigger('dom-update');
   });
   frankt.on("mod_class", (res) => {
@@ -85,12 +82,10 @@ function attachResponses(frankt) {
   // frankt.on("open_modal", (res) => Modal.open(res.html));
   // frankt.on("close_modal", (res) => Modal.close());
   frankt.on("prepend", (res) => {
-    console.log("prepend");
     $(res.target).prepend(res.html);
     $(res.target).trigger('dom-update');
   });
   frankt.on("append", (res) => {
-    console.log("append");
     $(res.target).append(res.html);
     $(res.target).trigger('dom-update');
   });
