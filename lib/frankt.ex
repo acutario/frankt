@@ -38,7 +38,7 @@ defmodule Frankt do
       Module.put_attribute(__MODULE__, :responses, unquote(message))
 
       def execute_response(unquote(message), params, socket) do
-          unquote(function).(params, socket)
+        unquote(function).(params, socket)
         {:noreply, socket}
       end
     end
@@ -69,7 +69,7 @@ defmodule Frankt do
     end
   end
 
-  def frankt_topic_name(client) do
+  def topic_name(client) do
     topic_hash = :crypto.hash(:md5, client)
     "frankt:#{Base.encode16(topic_hash)}"
   end
