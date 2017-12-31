@@ -1,28 +1,16 @@
-import $ from "jquery";
-import {Socket} from "phoenix";
-import serialize from "form-serialize";
+import $ from 'jquery';
+import * as Dom from './dom';
+import {Socket} from 'phoenix';
+import serialize from 'form-serialize';
 
-const form_tpl = $('<form><input type="hidden"/></form>');
 export let channel = {};
 
-function needValidation(element, target) {
-  if (element.dataset.franktNoValidate !== undefined) return false;
-  return target.nodeName === "FORM" && !target.checkValidity();
-}
-
-function generateFakeInput(name, value) {
-  let fake_el = form_tpl.clone();
-  fake_el.find('input').attr('name', name).val(value);
-  return serialize(fake_el[0], {hash: true});
-}
-
-export function getTargetData(element) {
+export function serializeForm(element) {
   const data = [];
-
-  data.push(generateFakeInput('csrf_token', $('meta[name=csrf]').attr('content')));
+  data.push({csrf_token: $('meta[name=csrf]').attr('content')});
 
   if (element.name) {
-    data.push(generateFakeInput(element.name, element.value));
+    data.push(Dom.serializeElement(element.name));
   }
 
   if (element.dataset.franktTarget) {
@@ -33,7 +21,7 @@ export function getTargetData(element) {
       e.preventDefault();
     });
 
-    if (needValidation(element, target)) {
+    if (Dom.needValidation(element, target)) {
       return target.reportValidity();
     }
 
@@ -50,7 +38,7 @@ export function sendMsg(action, data) {
 
 function handleEvent(e) {
   const target = e.currentTarget;
-  const data = getTargetData(target);
+  const data = serializeForm(target);
   e.preventDefault();
   if (data) sendMsg(target.dataset.franktAction, data);
   return false;
