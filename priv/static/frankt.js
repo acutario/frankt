@@ -2,13 +2,8 @@ import $ from "jquery";
 import {Socket} from "phoenix";
 import serialize from "form-serialize";
 
-const channelName = document.querySelector("meta[name=channel]").getAttribute("content");
-const userToken = document.querySelector("meta[name=user_token]").getAttribute("content");
-const tenantToken = document.querySelector("meta[name=tenant_token]").getAttribute("content");
-const locale = document.querySelector('html').getAttribute('lang');
-const socket = new Socket("/socket", { params: {user_token: userToken, tenant_token: tenantToken, locale: locale} });
 const form_tpl = $('<form><input type="hidden"/></form>');
-export const channel = socket.channel(channelName, {});
+export let channel = {};
 
 function needValidation(element, target) {
   if (element.dataset.franktNoValidate !== undefined) return false;
@@ -80,20 +75,22 @@ function attachResponses() {
   });
 }
 
-// Connect to the socket and join the Frankt channel (only if there are
-// Frankt elements in the DOM).
-export function init(force = false) {
+function attachEvents() {
   $(document).on("submit change click", "[data-frankt-action]:not(input)", handleEvent);
   $(document).on("change", "input[data-frankt-action]", handleEvent);
   $(document).on("keyup", "input[data-frankt-auto]", handleAutoEvent);
+}
 
+// Connect to the socket and join the Frankt channel.
+export function connect(channel_name, socket_params) {
+  const socket = new Socket('/socket', { params: socket_params });
   socket.connect();
+  channel = socket.channel(channel_name, {});
   return channel.join()
     .receive("ok", res => {
+      attachEvents()
       attachResponses();
       console.log("Connected to Frankt");
     })
     .receive("error", res => console.log("Unable to connect to Frankt", res));
-}
-
-// export default $(() => init());
+};
