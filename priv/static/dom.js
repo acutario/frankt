@@ -2,6 +2,9 @@ const k_r_submitter = /^(?:submit|button|image|reset|file)$/i;
 const k_r_success_contrls = /^(?:input|select|textarea|keygen)/i;
 const brackets = /(\[[^\[\]]*\])/g;
 
+// Matches IE Polyfill
+if (!Element.prototype.matches) Element.prototype.matches = Element.prototype.msMatchesSelector;
+
 export function needValidation(element, target) {
   if (element.dataset.franktNoValidate !== undefined) return false;
   return target.nodeName === "FORM" && !target.checkValidity();
