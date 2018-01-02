@@ -9,7 +9,6 @@ export function needValidation(element, target) {
 
 // Object/hash encoding serializer.
 function serializer(result, key, value) {
-  console.log(result);
   const matches = key.match(brackets);
 
   // Has brackets? Use the recursive assignment function to walk the keys,
