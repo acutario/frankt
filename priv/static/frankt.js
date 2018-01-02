@@ -9,9 +9,35 @@ export function sendMsg(action, data) {
   return channel.push(action, data);
 }
 
+export function serializeForm(element) {
+  const data = [];
+  data.push({csrf_token: document.querySelector('meta[name=csrf]').content});
+
+  if (element.name) {
+    data.push(Dom.serializeElement(element));
+  }
+
+  if (element.dataset.franktTarget) {
+    const target = document.querySelector(element.dataset.franktTarget);
+
+    // Block submit form on enter
+    $(target).on('submit', (e) => {
+      e.preventDefault();
+    });
+
+    if (Dom.needValidation(element, target)) {
+      return target.reportValidity();
+    }
+
+    data.push(Dom.serialize(target, {hash: true}));
+  }
+
+  return Object.assign(...data);
+}
+
 function handleEvent(e) {
   const target = e.currentTarget;
-  const data = Dom.serializeForm(target);
+  const data = serializeForm(target);
   e.preventDefault();
   if (data) sendMsg(target.dataset.franktAction, data);
   return false;
