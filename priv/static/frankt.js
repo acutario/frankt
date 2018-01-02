@@ -1,35 +1,8 @@
 import $ from 'jquery';
 import * as Dom from './dom';
 import {Socket} from 'phoenix';
-import serialize from 'form-serialize';
 
 export let channel = {};
-
-export function serializeForm(element) {
-  const data = [];
-  data.push({csrf_token: $('meta[name=csrf]').attr('content')});
-
-  if (element.name) {
-    data.push(Dom.serializeElement(element.name));
-  }
-
-  if (element.dataset.franktTarget) {
-    const target = document.querySelector(element.dataset.franktTarget);
-
-    // Block submit form on enter
-    $(target).on('submit', (e) => {
-      e.preventDefault();
-    });
-
-    if (Dom.needValidation(element, target)) {
-      return target.reportValidity();
-    }
-
-    data.push(serialize(target, {hash: true}));
-  }
-
-  return Object.assign(...data);
-}
 
 export function sendMsg(action, data) {
   if (channel.state === 'closed') init(true);
@@ -38,7 +11,7 @@ export function sendMsg(action, data) {
 
 function handleEvent(e) {
   const target = e.currentTarget;
-  const data = serializeForm(target);
+  const data = Dom.serializeForm(target);
   e.preventDefault();
   if (data) sendMsg(target.dataset.franktAction, data);
   return false;
