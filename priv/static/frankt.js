@@ -35,19 +35,12 @@ export function serializeForm(element) {
   return Object.assign(...data);
 }
 
-function handleEvent(e) {
-  const target = e.currentTarget;
-  const data = serializeForm(target);
+function handleEvent(e, selector) {
+  if (!e.target.matches(selector)) return true;
   e.preventDefault();
+  const target = e.target;
+  const data = serializeForm(target);
   if (data) sendMsg(target.dataset.franktAction, data);
-  return false;
-}
-
-function handleAutoEvent(e) {
-  const target = e.currentTarget;
-  const value = target.value;
-
-  if (value.length === 0 || value.length >= 2) handleEvent(e);
 }
 
 function attachResponses() {
@@ -63,9 +56,10 @@ function attachResponses() {
 }
 
 function attachEvents() {
-  $(document).on("submit change click", "[data-frankt-action]:not(input)", handleEvent);
-  $(document).on("change", "input[data-frankt-action]", handleEvent);
-  $(document).on("keyup", "input[data-frankt-auto]", handleAutoEvent);
+  document.addEventListener('click', (e) => handleEvent(e, '[data-frankt-action]:not(input)'), true);
+  document.addEventListener('change', (e) => handleEvent(e, '[data-frankt-action]'), true);
+  document.addEventListener('submit', (e) => handleEvent(e, '[data-frankt-action]'), true);
+  document.addEventListener('keyup', (e) => handleEvent(e, '[data-frankt-auto]'), true);
 }
 
 // Connect to the socket and join the Frankt channel.
