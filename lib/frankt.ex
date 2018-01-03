@@ -19,9 +19,10 @@ defmodule Frankt do
   This `use` macro ensures that all code needed by the DSL is loaded and
   imported.
   """
-  defmacro __using__(_) do
+  defmacro __using__(opts) do
     quote do
       Module.register_attribute __MODULE__, :responses, accumulate: true
+      Module.put_attribute __MODULE__, :gettext, unquote(Keyword.get(opts, :gettext))
 
       import Frankt, only: [defresponse: 2]
 
@@ -38,8 +39,7 @@ defmodule Frankt do
       Module.put_attribute(__MODULE__, :responses, unquote(message))
 
       def execute_response(unquote(message), params, socket) do
-        unquote(function).(params, socket)
-        {:noreply, socket}
+        Frankt.execute_response(unquote(function), params, socket, @gettext)
       end
     end
   end
@@ -69,8 +69,35 @@ defmodule Frankt do
     end
   end
 
-  def topic_name(client) do
-    topic_hash = :crypto.hash(:md5, client)
-    "frankt:#{Base.encode16(topic_hash)}"
+  @doc """
+  Build the topic name for the Frankt channel.
+
+  The topic name is used when connecting clients to Frankt. It can also be used in other
+  circumstances such broadcasting server-side updates for certain users.
+
+  The `client` variable can be any value used to identify each connection (for example the
+  connected user ID). This variable will be base16 encoded for privacy.
+  """
+  @spec topic_name(client :: String.t()) :: String.t()
+  def topic_name(client), do: "frankt:#{:md5 |> :crypto.hash(client) |> Base.encode16()}"
+
+  @doc false
+  def execute_response(function, params, socket, nil) do
+    function.(params, socket)
+    {:noreply, socket}
   end
+  def execute_response(function, params, socket, gettext) do
+    Gettext.with_locale(gettext, get_locale(socket), fn ->
+      function.(params, socket)
+      {:noreply, socket}
+    end)
+  end
+
+  defp get_locale(socket) do
+    case Map.get(socket.assigns, :locale) do
+      nil    -> raise "You have configured Frankt to use Gettext for i18n, but the response does not know which locale to use. Please store the desired locale into a `locale` assign in the socket."
+      locale -> locale
+    end
+  end
+
 end
