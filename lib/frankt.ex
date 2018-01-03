@@ -1,24 +1,43 @@
 defmodule Frankt do
   @moduledoc """
-  This module is the base used to define frankenstein responses using it's own
-  DSL to register responses to messages.
+  Trigger client-side commands from the server.
 
-  Usage example:
+  Frankt allows you to define websocket responses that will trigger commands in the clients.
+  Responses run on the server and leverage all the Elixir and Phoenix capabilities. A thin JS layer
+  applies the desired commands in the clients.
 
-      defmodule Frankt.Example do
-        use App.Web, :frankt
+  ## Usage
 
-        defresponse "example", fn(params, socket) ->
-          # do whathever is needed
-          push socket, "replace_with", %{html: html, target: target}
-        end
-      end
+  Frankt modules must define responses that are triggered by client-side actions.
+
+  ```
+  defmodule MyApp.Frankt.Example do
+    use Frankt
+
+    defresponse "example:replace-message", fn (params, socket) ->
+      push socket, "replace_with", %{html: "<h1>Replaced message</h1>", target: "#message"}
+    end
+  end
+  ```
+
+  ## Usage with Gettext
+
+  By default Frankt actions don't use internationalization. If you want your responses to be
+  executed under a certain locale, you must set up the Gettext module that must be used by Frankt.
+
+  ```
+  defmodule MyApp.Frankt.Example do
+    use Frankt, gettext: MyApp.Gettext
+
+    # Define your responses as usual and they will be automatically executed with the adequate
+    locale.
+  end
+  ```
+
+  Frankt will try to get the locale from the `locale` socket assign. You must ensure that this
+  assign is set in the socket before executing Frankt responses.
   """
 
-  @doc """
-  This `use` macro ensures that all code needed by the DSL is loaded and
-  imported.
-  """
   defmacro __using__(opts) do
     quote do
       Module.register_attribute __MODULE__, :responses, accumulate: true
@@ -44,17 +63,15 @@ defmodule Frankt do
     end
   end
 
-  @doc """
-  Before the compilation takes place we need to generate the module's `use`
-  handler so it can be used inside the Frankt channel with the response
-  handlers exported correctly.
+  # Before the compilation takes place we need to generate the module's `use`
+  # handler so it can be used inside the Frankt channel with the response
+  # handlers exported correctly.
 
-  It's important to point that this process should be done just before the
-  compilation takes place to:
-    * Be able to generate a bit more of code that go into the compilation
-    * Be able to read responses storage to kow which ones needs to inject in the
-      socket channel.
-  """
+  # It's important to point that this process should be done just before the
+  # compilation takes place to:
+  #   * Be able to generate a bit more of code that go into the compilation
+  #   * Be able to read responses storage to kow which ones needs to inject in the
+  #     socket channel.
   defmacro __before_compile__(_) do
     quote do
       defmacro __using__(_) do

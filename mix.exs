@@ -9,6 +9,14 @@ defmodule Frankt.Mixfile do
       start_permanent: Mix.env == :prod,
       deps: deps(),
       package: package(),
+
+      # Docs
+      name: "Frankt",
+      source_url: "https://github.com/acutario/frankt",
+      docs: [
+        main: "readme",
+        extras: ["README.md"]
+      ]
     ]
   end
 
@@ -23,6 +31,7 @@ defmodule Frankt.Mixfile do
   defp deps do
     [
       {:gettext, "~> 0.13", optional: true},
+      {:ex_doc, "~> 0.18.1", only: :dev, runtime: false}
     ]
   end
 
