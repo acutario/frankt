@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import * as Dom from './dom';
 import {Socket} from 'phoenix';
 
