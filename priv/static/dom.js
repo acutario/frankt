@@ -240,3 +240,8 @@ export function serializeElement(element) {
     return {}
   }
 }
+
+export function blockSubmit(e) {
+  e.preventDefault();
+  e.target.removeEventListener(e.type, this);
+}

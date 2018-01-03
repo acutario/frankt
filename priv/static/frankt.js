@@ -19,11 +19,8 @@ export function serializeForm(element) {
 
   if (element.dataset.franktTarget) {
     const target = document.querySelector(element.dataset.franktTarget);
-
     // Block submit form on enter
-    $(target).on('submit', (e) => {
-      e.preventDefault();
-    });
+    target.addEventListener('submit', Dom.blockSubmit, true);
 
     if (Dom.needValidation(element, target)) {
       return target.reportValidity();
