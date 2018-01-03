@@ -42,9 +42,9 @@ function handleEvent(e, selector) {
 
 function attachResponses() {
   channel.on("redirect", (res) => window.location = res.target);
-  channel.on("replace_with", (res) => $(res.target).replaceWith(res.html));
-  channel.on("prepend", (res) => $(res.target).prepend(res.html));
-  channel.on("append", (res) => $(res.target).append(res.html));
+  channel.on("replace_with", (res) => document.querySelector(res.target).outerHTML = res.html);
+  channel.on("append", (res) => document.querySelector(res.target).insertAdjacentHTML('beforeend', res.html));
+  channel.on("prepend", (res) => document.querySelector(res.target).insertAdjacentHTML('afterbegin', res.html));
   channel.on("mod_class", (res) => {
     for (const element of document.querySelectorAll(res.target)) {
       element.classList[res.action](res.klass);
