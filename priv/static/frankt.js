@@ -32,11 +32,13 @@ export function serializeForm(element) {
 }
 
 function handleEvent(e, selector) {
-  if (!e.target.matches(selector)) return true;
-  e.preventDefault();
-  const target = e.target;
-  const data = serializeForm(target);
-  if (data) sendMsg(target.dataset.franktAction, data);
+  if (e.target.matches(selector) || e.target.closest(selector)){
+    const target = e.target.matches(selector) ? e.target : e.target.closest(selector);
+    e.preventDefault();
+    const data = serializeForm(target);
+    if (data) sendMsg(target.dataset.franktAction, data);
+    return false;
+  }
 }
 
 function attachResponses() {
