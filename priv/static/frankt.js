@@ -19,7 +19,7 @@ export function serializeForm(element) {
   if (element.dataset.franktTarget) {
     const target = document.querySelector(element.dataset.franktTarget);
     // Block submit form on enter
-    target.addEventListener('keyup', Dom.blockSubmit, true);
+    target.addEventListener('keydown', Dom.blockSubmit, true);
 
     if (Dom.needValidation(element, target)) {
       return target.reportValidity();
