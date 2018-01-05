@@ -242,6 +242,9 @@ export function serializeElement(element) {
 }
 
 export function blockSubmit(e) {
-  e.preventDefault();
-  e.target.removeEventListener(e.type, this);
+  if (e.key === "Enter") {
+    e.preventDefault();
+    e.target.removeEventListener(e.type, this);
+    return false;
+  }
 }
