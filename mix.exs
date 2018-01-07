@@ -41,9 +41,12 @@ defmodule Frankt.Mixfile do
   # Run "mix help docs" to learn about documentation.
   defp docs do
     [
-      extra_section: "GUIDES",
-      extras: ["guides/Concepts.md", "guides/Getting Started.md"],
-      main: "Frankt",
+      extras: [
+        "README.md": [filename: "README.md", title: "Introduction"],
+        "guides/Concepts.md": [],
+        "guides/Getting Started.md": [],
+      ],
+      main: "README.md",
     ]
   end
 end

@@ -1,4 +1,4 @@
-# Concepts Guide
+# Concepts
 
 Frankt works around just three main concepts: triggers, responses and actions. This guide explains how they fit together.
 
@@ -13,8 +13,6 @@ Frankt is designed to enhance the existing HTML of your application. This is ach
 ```
 
 In the previous example, the `data-frankt-action` data attribute ties the button to Frankt. Clicking on the button triggers Frankt and sends the `example:say-hello` message to the backend.
-
-🚧 EXAMPLES WITH FORMS AND NAMED ELEMENTS
 
 ## Responses
 
