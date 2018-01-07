@@ -41,7 +41,7 @@ execute the corresponding action in the client. The result would be:
 
 You can learn more about how Frankt works by taking a look at our [concepts guide](https://hexdocs.pm/frankt/concepts.html).
 
-For more complex examples with different actions, form submissions and i18n take a look at our [getting started guide](https://hexdocs.pm/frankt/getting-started.html).
+For more complex examples with different actions, form submissions and i18n take a look at our [examples](https://hexdocs.pm/frankt/examples.html).
 
 ## Installing Frankt
 

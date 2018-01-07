@@ -44,7 +44,7 @@ defmodule Frankt.Mixfile do
       extras: [
         "README.md": [filename: "README.md", title: "Introduction"],
         "guides/Concepts.md": [],
-        "guides/Getting Started.md": [],
+        "guides/Examples.md": [],
       ],
       main: "README.md",
     ]
