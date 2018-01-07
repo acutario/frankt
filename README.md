@@ -8,7 +8,7 @@ Frankt pairs with [Phoenix Channels](https://hexdocs.pm/phoenix/channels.html) t
 How does it work? Annotate your HTML with the Frankt action that must be triggered.
 
 ```html
-<button data-frankt-action="example:say-hello">
+<button data-frankt-action="example:say-hello" id="example-frankt-button">
   Say hello
 </button>
 ```
