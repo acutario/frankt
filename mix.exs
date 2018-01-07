@@ -4,25 +4,22 @@ defmodule Frankt.Mixfile do
   def project do
     [
       app: :frankt,
+      name: "Frankt",
       version: "0.1.0",
       elixir: "~> 1.5",
+      source_url: "https://github.com/acutario/frankt",
+      homepage_url: "https://github.com/acutario/frankt",
       start_permanent: Mix.env == :prod,
       deps: deps(),
       package: package(),
-
-      # Docs
-      name: "Frankt",
-      source_url: "https://github.com/acutario/frankt",
-      docs: [
-        extras: ["guides/Concepts.md", "guides/Getting Started.md"]
-      ]
+      docs: docs(),
     ]
   end
 
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger],
     ]
   end
 
@@ -30,13 +27,23 @@ defmodule Frankt.Mixfile do
   defp deps do
     [
       {:gettext, "~> 0.13", optional: true},
-      {:ex_doc, "~> 0.18.1", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.18.1", only: :dev, runtime: false},
     ]
   end
 
   defp package do
-    [licenses: ["MIT"],
-     files: ~w(lib priv) ++
-    ~w(LICENSE mix.exs package.json README.md)]
+    [
+      licenses: ["MIT"],
+      files: ~w(lib priv LICENSE mix.exs package.json README.md),
+    ]
+  end
+
+  # Run "mix help docs" to learn about documentation.
+  defp docs do
+    [
+      extra_section: "GUIDES",
+      extras: ["guides/Concepts.md", "guides/Getting Started.md"],
+      main: "Frankt",
+    ]
   end
 end
