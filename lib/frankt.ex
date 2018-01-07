@@ -52,6 +52,22 @@ defmodule Frankt do
   [examples](https://hexdocs.pm/frankt/examples.html).
   """
 
+  @typedoc """
+  Annonymous function that handles responses.
+
+  Handler functions receive two parameters: the first one is the map of parameters sent by the
+  client (or empty if none) and the second one is the socket to which the client is connected.
+
+  Handler functions don't have to return anything, as their return value will be discarded. The
+  handler function can `push` many actions to the socket so they will be executed in the client. The
+  `push` can happen anywhere inside the function, the preferred approach is to push as soon as
+  possible in order to provide quick feedback.
+
+  Since handler functions are simply annonymous functions every language rule (such as pattern
+  matching) applies.
+  """
+  @type response_handler :: ((params :: map(), socket :: Phoenix.Socket.t()) -> any())
+
   defmacro __using__(opts) do
     quote do
       Module.register_attribute __MODULE__, :responses, accumulate: true
@@ -64,9 +80,15 @@ defmodule Frankt do
   end
 
   @doc """
-  Used to define a response. It generates the code that call the response
-  handler `function` when a `message` is received.
+  Define a response to client-side triggers.
+
+  This macro generates the code that call the response handler `function` when `message` is received.
+
+  Take into account that to make a certain response behave differently depending on the received
+  params you must pattern match in the response handler `function` instead of using a second
+  `defresponse`. For more information take a look at `t:response_handler/0`.
   """
+  @spec defresponse(message :: String.t(), function :: response_handler()) :: any()
   defmacro defresponse(message, function) do
     quote do
       Module.put_attribute(__MODULE__, :responses, unquote(message))
