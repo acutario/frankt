@@ -14,8 +14,7 @@ defmodule Frankt.Mixfile do
       name: "Frankt",
       source_url: "https://github.com/acutario/frankt",
       docs: [
-        main: "readme",
-        extras: ["README.md"]
+        extras: ["guides/Concepts.md", "guides/Getting Started.md"]
       ]
     ]
   end

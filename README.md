@@ -21,7 +21,7 @@ defmodule MyApp.Frankt.Example do
   defresponse "example:say-hello", fn _params, socket ->
     # Do whathever work is needed: query the database, update schemas, render templates, etc
 
-    push socket, "mod_class", %{action: "add", target: "#example-frankt-button", klass: "updated-class"}
+    push(socket, "mod_class", %{action: "add", target: "#example-frankt-button", klass: "updated-class"})
   end
 
 end
@@ -36,7 +36,7 @@ execute the corresponding action in the client. The result would be:
 </button>
 ```
 
-You can learn more about how Frankt works by taking a look at our [concepts guide](TODO).
+You can learn more about how Frankt works by taking a look at our [concepts guide](guides/Concepts.md).
 
 For more complex examples with different actions, form submissions and i18n take a look at our [getting started guide](TODO).
 
