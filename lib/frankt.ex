@@ -20,6 +20,14 @@ defmodule Frankt do
   end
   ```
 
+  Then, you must make sure that the responses are available in the channel by adding the following
+  line:
+
+  ```
+  # Add this line into your channel module.
+  use MyApp.Frankt.Example
+  ```
+
   ## Usage with Gettext
 
   By default Frankt actions don't use internationalization. If you want your responses to be
@@ -36,6 +44,12 @@ defmodule Frankt do
 
   Frankt will try to get the locale from the `locale` socket assign. You must ensure that this
   assign is set in the socket before executing Frankt responses.
+
+  ## More information and examples
+
+  If you want more information about how to use Frankt, please take a look at the
+  [concepts guide](https://hexdocs.pm/frankt/concepts.html) and the
+  [examples](https://hexdocs.pm/frankt/examples.html).
   """
 
   defmacro __using__(opts) do
