@@ -94,7 +94,7 @@ defmodule Frankt do
       Module.put_attribute(__MODULE__, :responses, unquote(message))
 
       def execute_response(unquote(message), params, socket) do
-        Frankt.execute_response(unquote(function), params, socket, @gettext)
+        Frankt.__execute_response__(unquote(function), params, socket, @gettext)
       end
     end
   end
@@ -135,11 +135,11 @@ defmodule Frankt do
   def topic_name(client), do: "frankt:#{:md5 |> :crypto.hash(client) |> Base.encode16()}"
 
   @doc false
-  def execute_response(function, params, socket, nil) do
+  def __execute_response__(function, params, socket, nil) do
     function.(params, socket)
     {:noreply, socket}
   end
-  def execute_response(function, params, socket, gettext) do
+  def __execute_response__(function, params, socket, gettext) do
     Gettext.with_locale(gettext, get_locale(socket), fn ->
       function.(params, socket)
       {:noreply, socket}
