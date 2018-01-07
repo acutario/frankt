@@ -12,7 +12,7 @@ Frankt is designed to enhance the existing HTML of your application. This is ach
 </button>
 ```
 
-In the previous example, the `data-frankt-action` data attribute ties the button to Frankt. Clicking on the button triggers Frankt and sends the `example:say-hello` message to the backend.
+In the previous example, the `data-frankt-action` data attribute ties the button to Frankt. Clicking on the button triggers Frankt event and sends the `example:say-hello` message to the backend.
 
 ## Responses
 
