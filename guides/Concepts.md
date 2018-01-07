@@ -29,7 +29,9 @@ As we've just seen, responses can push actions to be executed by the client. Act
 
 Frankt currently supports 5 different actions, but we expect this list to keep growing.
 
-- `redirect` this action redirects the client to the target path.
+### `redirect`
+
+This action redirects the client to the target path.
 
   ```elixir
   push(socket, "redirect", %{
@@ -37,7 +39,9 @@ Frankt currently supports 5 different actions, but we expect this list to keep g
   })
   ```
 
-- `replace_with` this actions replaces the target element with the given HTML. You can reuse your existing Phoenix templates by calling `Phoenix.View.render_to_string/3`.
+### `replace_with`
+
+This actions replaces the target element with the given HTML. You can reuse your existing Phoenix templates by calling `Phoenix.View.render_to_string/3`.
 
   ```elixir
   push(socket, "replace_with", %{
@@ -46,7 +50,9 @@ Frankt currently supports 5 different actions, but we expect this list to keep g
   })
   ```
 
-- `append` this action appends the given HTML after the target element. As with every other action, you can reuse your existing Phoenix templates.
+### `append`
+
+This action appends the given HTML after the target element. As with every other action, you can reuse your existing Phoenix templates.
 
   ```elixir
   push(socket, "append", %{
@@ -55,9 +61,13 @@ Frankt currently supports 5 different actions, but we expect this list to keep g
   })
   ```
 
-- `prepend` this action works exactly as `append`, but the given HTML will be put before the target element instead of after.
+### `prepend`
 
-- `mod_class` this action modifies the class list of the target elements.
+This action works exactly as `append`, but the given HTML will be put before the target element instead of after.
+
+### `mod_class`
+
+This action modifies the class list of the target elements.
 
   ```elixir
   push(socket, "mod_class", %{
