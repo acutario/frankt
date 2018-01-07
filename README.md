@@ -38,7 +38,7 @@ execute the corresponding action in the client. The result would be:
 
 You can learn more about how Frankt works by taking a look at our [concepts guide](guides/Concepts.md).
 
-For more complex examples with different actions, form submissions and i18n take a look at our [getting started guide](TODO).
+For more complex examples with different actions, form submissions and i18n take a look at our [getting started guide](guides/Getting%20Started.md).
 
 ## Installing Frankt
 
