@@ -7,7 +7,7 @@ Frankt works around just three main concepts: triggers, responses and actions. T
 Frankt is designed to enhance the existing HTML of your application. This is achieved by adding some data attributes known as triggers into HTML elements.
 
 ```html
-<button data-frankt-action="example:say-hello" id="example-frankt-button">
+<button data-frankt-action="example:say-hello">
   Say hello
 </button>
 ```
