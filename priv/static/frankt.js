@@ -5,7 +5,7 @@ export let channel = {};
 
 export function sendMsg(action, data) {
   if (channel.state === 'closed') init(true);
-  return channel.push(action, data);
+  return channel.push('frankt-action', {action: action, data: data});
 }
 
 export function serializeForm(element) {
