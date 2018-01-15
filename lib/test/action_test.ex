@@ -2,9 +2,8 @@ defmodule Frankt.ActionTest do
   @moduledoc """
   Conveniences for testing Frankt actions.
 
-  This module provides useful convenience functions for testing Frankt actions. The provided
-  functions simply wrap the calls provided by Phoenix.  For more information take a look
-  at `Phoenix.ChannelTest`.
+  Frankt tests are actually channel tests. For more information take a look at
+  `Phoenix.ChannelTest`.
   """
 
   @doc false
@@ -19,6 +18,8 @@ defmodule Frankt.ActionTest do
 
   Pushes a mesasge into the channel which triggers the Frankt `handle_in/3` function and then
   dispatches to the corresponding action.
+  After pushing the message to Frankt you can check the response by using
+  `Phoenix.ChannelTest.assert_push/3`.
   """
   @spec frankt_action(socket :: Socket.t, action :: String.t, payload :: map()) :: reference()
   defmacro frankt_action(socket, action, payload \\ %{}) do
