@@ -118,7 +118,7 @@ defmodule Frankt do
   @doc false
   def __gettext__(frankt_module) do
     :frankt
-    |> Application.get_env(__MODULE__, [])
+    |> Application.get_env(frankt_module, [])
     |> Keyword.get(:gettext)
   end
 
