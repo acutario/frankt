@@ -1,3 +1,5 @@
+import deepCompact from 'deep-compact';
+
 const k_r_submitter = /^(?:submit|button|image|reset|file)$/i;
 const k_r_success_contrls = /^(?:input|select|textarea|keygen)/i;
 const brackets = /(\[[^\[\]]*\])/g;
@@ -20,8 +22,7 @@ function serializer(result, key, value) {
   if (matches) {
     const keys = parse_keys(key);
     hash_assign(result, keys, value);
-  }
-  else {
+  } else {
     // Non bracket notation can make assignments directly.
     const existing = result[key];
 
@@ -33,11 +34,10 @@ function serializer(result, key, value) {
     // assignment could go through `hash_assign`.
     if (existing) {
       if (!Array.isArray(existing)) {
-        result[key] = [ existing ];
+        result[key] = [existing];
       }
       result[key].push(value);
-    }
-    else {
+    } else {
       result[key] = value;
     }
   }
@@ -60,7 +60,7 @@ export function serialize(form, options) {
   //Object store each radio and set if it's empty or not
   const radio_store = {};
 
-  for (let i=0 ; i<elements.length ; ++i) {
+  for (let i = 0; i < elements.length; ++i) {
     var element = elements[i];
 
     // ingore disabled fields
@@ -69,7 +69,7 @@ export function serialize(form, options) {
     }
     // ignore anyhting that is not considered a success field
     if (!k_r_success_contrls.test(element.nodeName) ||
-    k_r_submitter.test(element.type)) {
+      k_r_submitter.test(element.type)) {
       continue;
     }
 
@@ -93,8 +93,7 @@ export function serialize(form, options) {
       if (element.type === 'radio') {
         if (!radio_store[element.name] && !element.checked) {
           radio_store[element.name] = false;
-        }
-        else if (element.checked) {
+        } else if (element.checked) {
           radio_store[element.name] = true;
         }
       }
@@ -103,8 +102,7 @@ export function serialize(form, options) {
       if (val == undefined && element.type == 'radio') {
         continue;
       }
-    }
-    else {
+    } else {
       // value-less fields are ignored unless options.empty is true
       if (!val) {
         continue;
@@ -117,7 +115,7 @@ export function serialize(form, options) {
 
       var selectOptions = element.options;
       var isSelectedOptions = false;
-      for (var j=0 ; j<selectOptions.length ; ++j) {
+      for (let j = 0; j < selectOptions.length; ++j) {
         var option = selectOptions[j];
         var allowedEmpty = options.empty && !option.value;
         var hasValue = (option.value || allowedEmpty);
@@ -131,8 +129,7 @@ export function serialize(form, options) {
           // "foo" and "foo[]" should be arrays.
           if (key.slice(key.length - 2) !== '[]') {
             result = serializer(result, key + '[]', option.value);
-          }
-          else {
+          } else {
             result = serializer(result, key, option.value);
           }
         }
@@ -158,7 +155,7 @@ export function serialize(form, options) {
     }
   }
 
-  return result;
+  return deepCompact(result);
 }
 
 function parse_keys(string) {
@@ -192,8 +189,7 @@ function hash_assign(result, keys, value) {
 
     if (Array.isArray(result)) {
       result.push(hash_assign(null, keys, value));
-    }
-    else {
+    } else {
       // This might be the result of bad name attributes like "[][foo]",
       // in this case the original `result` object will already be
       // assigned to an object literal. Rather than coerce the object to
@@ -209,8 +205,7 @@ function hash_assign(result, keys, value) {
   // Key is an attribute name and can be assigned directly.
   if (!between) {
     result[key] = hash_assign(result[key], keys, value);
-  }
-  else {
+  } else {
     const string = between[1];
     // +var converts the variable into a number
     // better than parseInt because it doesn't truncate away trailing
@@ -222,8 +217,7 @@ function hash_assign(result, keys, value) {
     if (isNaN(index)) {
       result = result || {};
       result[string] = hash_assign(result[string], keys, value);
-    }
-    else {
+    } else {
       result = result || [];
       result[index] = hash_assign(result[index], keys, value);
     }
