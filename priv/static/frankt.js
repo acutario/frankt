@@ -16,6 +16,10 @@ export function serializeForm(element) {
     data.push(Dom.serializeElement(element));
   }
 
+  if (element.dataset.franktData) {
+    data.push($(element).data('franktData'));
+  }
+
   if (element.dataset.franktTarget) {
     const target = document.querySelector(element.dataset.franktTarget);
     // Block submit form on enter
@@ -32,7 +36,7 @@ export function serializeForm(element) {
 }
 
 function handleEvent(e, selector) {
-  if (e.target.matches(selector) || e.target.closest(selector)){
+  if (e.target.matches(selector) || e.target.closest(selector)) {
     const target = e.target.matches(selector) ? e.target : e.target.closest(selector);
     e.preventDefault();
     const data = serializeForm(target);
