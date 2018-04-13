@@ -10,7 +10,6 @@ export function sendMsg(action, data) {
 
 export function serializeForm(element) {
   const data = [];
-  data.push({csrf_token: document.querySelector('meta[name=csrf]').content});
 
   if (element.name && element.tagName !== "INPUT") {
     data.push(Dom.serializeElement(element));
