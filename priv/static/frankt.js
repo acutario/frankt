@@ -9,7 +9,7 @@ export function sendMsg(action, data) {
 }
 
 export function serializeForm(element) {
-  const data = [];
+  const data = [{}];
 
   if (element.name && element.tagName !== "INPUT") {
     data.push(Dom.serializeElement(element));
