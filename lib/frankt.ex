@@ -86,7 +86,7 @@ defmodule Frankt do
   def __execute_action__(module, fun, params, socket, gettext) do
     invoke_action = fn ->
       unless function_exported?(module, fun, 2) do
-        raise "Frankt is trying to execute an action, but the handler module does not define the appropriate function. Please define a '#{fun}/3' function in your ·#{module} module."
+        raise "Frankt is trying to execute an action, but the handler module does not define the appropriate function. Please define a '#{fun}/2' function in your ·#{module} module."
       end
       apply(module, fun, [params, socket])
     end
