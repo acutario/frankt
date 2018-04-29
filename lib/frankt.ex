@@ -68,89 +68,58 @@ defmodule Frankt do
   """
   @type response_handler :: ((params :: map(), socket :: Phoenix.Socket.t()) -> any())
 
-  defmacro __using__(opts) do
+  defmacro __using__(_opts) do
     quote do
-      Module.register_attribute __MODULE__, :responses, accumulate: true
-      Module.put_attribute __MODULE__, :gettext, unquote(Keyword.get(opts, :gettext))
+      def handle_in("frankt-action", params = %{"action" => action}, socket) do
+        [handler_name, handler_fn] = String.split(action, ":")
+        handler_module = Frankt.__handler__(__MODULE__, handler_name)
+        gettext = Frankt.__gettext__(__MODULE__)
+        data = Map.get(params, "data", %{})
 
-      import Frankt, only: [defresponse: 2]
-
-      @before_compile unquote(__MODULE__)
-    end
-  end
-
-  @doc """
-  Define a response to client-side triggers.
-
-  This macro generates the code that call the response handler `function` when `message` is received.
-
-  Take into account that to make a certain response behave differently depending on the received
-  params you must pattern match in the response handler `function` instead of using a second
-  `defresponse`. For more information take a look at `t:response_handler/0`.
-  """
-  @spec defresponse(message :: String.t(), function :: response_handler()) :: any()
-  defmacro defresponse(message, function) do
-    quote do
-      Module.put_attribute(__MODULE__, :responses, unquote(message))
-
-      def execute_response(unquote(message), params, socket) do
-        Frankt.__execute_response__(unquote(function), params, socket, @gettext)
+        Frankt.__execute_action__(handler_module, String.to_existing_atom(handler_fn), data, socket, gettext)
+        {:noreply, socket}
       end
     end
   end
-
-  # Before the compilation takes place we need to generate the module's `use`
-  # handler so it can be used inside the Frankt channel with the response
-  # handlers exported correctly.
-
-  # It's important to point that this process should be done just before the
-  # compilation takes place to:
-  #   * Be able to generate a bit more of code that go into the compilation
-  #   * Be able to read responses storage to kow which ones needs to inject in the
-  #     socket channel.
-  defmacro __before_compile__(_) do
-    quote do
-      defmacro __using__(_) do
-        Enum.map(@responses, fn message ->
-          quote do
-            def handle_in(unquote(message), params, socket) do
-              unquote(__MODULE__).execute_response(unquote(message), params, socket)
-            end
-          end
-        end)
-      end
-    end
-  end
-
-  @doc """
-  Build the topic name for the Frankt channel.
-
-  The topic name is used when connecting clients to Frankt. It can also be used in other
-  circumstances such broadcasting server-side updates for certain users.
-
-  The `client` variable can be any value used to identify each connection (for example the
-  connected user ID). This variable will be base16 encoded for privacy.
-  """
-  @spec topic_name(client :: String.t()) :: String.t()
-  def topic_name(client), do: "frankt:#{:md5 |> :crypto.hash(client) |> Base.encode16()}"
 
   @doc false
-  def __execute_response__(function, params, socket, nil) do
-    function.(params, socket)
-    {:noreply, socket}
-  end
-  def __execute_response__(function, params, socket, gettext) do
-    Gettext.with_locale(gettext, get_locale(socket), fn ->
-      function.(params, socket)
-      {:noreply, socket}
-    end)
+  def __execute_action__(module, fun, params, socket, gettext) do
+    invoke_action = fn ->
+      unless function_exported?(module, fun, 2) do
+        raise "Frankt is trying to execute an action, but the handler module does not define the appropriate function. Please define a '#{fun}/2' function in your ·#{module} module."
+      end
+      apply(module, fun, [params, socket])
+    end
+
+    if gettext do
+      locale =
+        case Map.get(socket.assigns, :locale) do
+          nil    -> raise "You have configured Frankt to use Gettext for i18n, but the response does not know which locale to use. Please store the desired locale into a `locale` assign in the socket."
+          locale -> locale
+        end
+      Gettext.with_locale(gettext, locale, invoke_action)
+    else
+      invoke_action.()
+    end
   end
 
-  defp get_locale(socket) do
-    case Map.get(socket.assigns, :locale) do
-      nil    -> raise "You have configured Frankt to use Gettext for i18n, but the response does not know which locale to use. Please store the desired locale into a `locale` assign in the socket."
-      locale -> locale
+  @doc false
+  def __handler__(frankt_module, name) when  is_binary(name) do
+    handlers = Application.get_env(:frankt, frankt_module)
+    if is_nil(handlers) do
+      raise "You have not configured any handlers for Frankt. Please set at least one handler in your configuration."
     end
+    case get_in(handlers, [:handlers, String.to_existing_atom(name)]) do
+      nil -> "Frankt can not find a handler for '#{name}'. Please, chech that you are using the correct name or define a new handler in your configuration."
+      handler -> handler
+    end
+  end
+
+  @doc false
+  def __gettext__(frankt_module) do
+    :frankt
+    |> Application.get_env(frankt_module, [])
+    |> Keyword.get(:gettext)
   end
 
 end

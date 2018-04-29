@@ -5,15 +5,18 @@ export let channel = {};
 
 export function sendMsg(action, data) {
   if (channel.state === 'closed') init(true);
-  return channel.push(action, data);
+  return channel.push('frankt-action', {action: action, data: data});
 }
 
 export function serializeForm(element) {
-  const data = [];
-  data.push({csrf_token: document.querySelector('meta[name=csrf]').content});
+  const data = [{}];
 
   if (element.name && element.tagName !== "INPUT") {
     data.push(Dom.serializeElement(element));
+  }
+
+  if (element.dataset.franktData) {
+    data.push($(element).data('franktData'));
   }
 
   if (element.dataset.franktTarget) {
@@ -32,7 +35,7 @@ export function serializeForm(element) {
 }
 
 function handleEvent(e, selector) {
-  if (e.target.matches(selector) || e.target.closest(selector)){
+  if (e.target.matches(selector) || e.target.closest(selector)) {
     const target = e.target.matches(selector) ? e.target : e.target.closest(selector);
     e.preventDefault();
     const data = serializeForm(target);
