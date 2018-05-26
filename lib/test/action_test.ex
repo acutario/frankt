@@ -21,7 +21,7 @@ defmodule Frankt.ActionTest do
   After pushing the message to Frankt you can check the response by using
   `Phoenix.ChannelTest.assert_push/3`.
   """
-  @spec frankt_action(socket :: Socket.t, action :: String.t, payload :: map()) :: reference()
+  @spec frankt_action(socket :: Socket.t(), action :: String.t(), payload :: map()) :: reference()
   defmacro frankt_action(socket, action, payload \\ %{}) do
     quote do
       push(unquote(socket), "frankt-action", %{action: unquote(action), data: unquote(payload)})
