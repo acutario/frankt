@@ -12,7 +12,8 @@ defmodule Frankt.Mixfile do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
-      docs: docs()
+      docs: docs(),
+      elixirc_paths: elixirc_paths(Mix.env())
     ]
   end
 
@@ -50,4 +51,8 @@ defmodule Frankt.Mixfile do
       main: "README.md"
     ]
   end
+
+  # Specifies paths to compile per environment.
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_env), do: ["lib"]
 end
