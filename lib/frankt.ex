@@ -66,7 +66,7 @@ defmodule Frankt do
   Since handler functions are simply annonymous functions every language rule (such as pattern
   matching) applies.
   """
-  @type response_handler :: ((params :: map(), socket :: Phoenix.Socket.t()) -> any())
+  @type response_handler :: (params :: map(), socket :: Phoenix.Socket.t() -> any())
 
   defmacro __using__(_opts) do
     quote do
@@ -76,7 +76,14 @@ defmodule Frankt do
         gettext = Frankt.__gettext__(__MODULE__)
         data = Map.get(params, "data", %{})
 
-        Frankt.__execute_action__(handler_module, String.to_existing_atom(handler_fn), data, socket, gettext)
+        Frankt.__execute_action__(
+          handler_module,
+          String.to_existing_atom(handler_fn),
+          data,
+          socket,
+          gettext
+        )
+
         {:noreply, socket}
       end
     end
@@ -86,17 +93,24 @@ defmodule Frankt do
   def __execute_action__(module, fun, params, socket, gettext) do
     invoke_action = fn ->
       unless function_exported?(module, fun, 2) do
-        raise "Frankt is trying to execute an action, but the handler module does not define the appropriate function. Please define a '#{fun}/2' function in your ·#{module} module."
+        raise "Frankt is trying to execute an action, but the handler module does not define the appropriate function. Please define a '#{
+                fun
+              }/2' function in your ·#{module} module."
       end
+
       apply(module, fun, [params, socket])
     end
 
     if gettext do
       locale =
         case Map.get(socket.assigns, :locale) do
-          nil    -> raise "You have configured Frankt to use Gettext for i18n, but the response does not know which locale to use. Please store the desired locale into a `locale` assign in the socket."
-          locale -> locale
+          nil ->
+            raise "You have configured Frankt to use Gettext for i18n, but the response does not know which locale to use. Please store the desired locale into a `locale` assign in the socket."
+
+          locale ->
+            locale
         end
+
       Gettext.with_locale(gettext, locale, invoke_action)
     else
       invoke_action.()
@@ -104,14 +118,19 @@ defmodule Frankt do
   end
 
   @doc false
-  def __handler__(frankt_module, name) when  is_binary(name) do
+  def __handler__(frankt_module, name) when is_binary(name) do
     handlers = Application.get_env(:frankt, frankt_module)
+
     if is_nil(handlers) do
       raise "You have not configured any handlers for Frankt. Please set at least one handler in your configuration."
     end
+
     case get_in(handlers, [:handlers, String.to_existing_atom(name)]) do
-      nil -> "Frankt can not find a handler for '#{name}'. Please, chech that you are using the correct name or define a new handler in your configuration."
-      handler -> handler
+      nil ->
+        "Frankt can not find a handler for '#{name}'. Please, chech that you are using the correct name or define a new handler in your configuration."
+
+      handler ->
+        handler
     end
   end
 
@@ -121,5 +140,4 @@ defmodule Frankt do
     |> Application.get_env(frankt_module, [])
     |> Keyword.get(:gettext)
   end
-
 end
