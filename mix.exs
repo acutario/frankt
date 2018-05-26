@@ -26,6 +26,7 @@ defmodule Frankt.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:phoenix, "~> 1.3"},
       {:gettext, "~> 0.13", optional: true},
       {:ex_doc, "~> 0.18.1", only: :dev, runtime: false}
     ]
