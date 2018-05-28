@@ -1,4 +1,6 @@
 defmodule Frankt.ChannelCase do
+  @moduledoc false
+
   use ExUnit.CaseTemplate
 
   using do

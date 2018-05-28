@@ -1,4 +1,6 @@
 defmodule Frankt.TestApplication.FranktChannel do
+  @moduledoc false
+
   use Phoenix.Channel
 
   use Frankt

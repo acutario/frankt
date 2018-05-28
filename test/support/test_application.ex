@@ -1,4 +1,6 @@
 defmodule Frankt.TestApplication do
+  @moduledoc false
+
   use Application
 
   alias Frankt.TestApplication.Endpoint

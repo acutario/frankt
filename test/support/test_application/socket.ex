@@ -1,4 +1,6 @@
 defmodule Frankt.TestApplication.Socket do
+  @moduledoc false
+
   use Phoenix.Socket
 
   channel("room:*", Frankt.TestApplication.FranktChannel)
