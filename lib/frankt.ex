@@ -70,29 +70,38 @@ defmodule Frankt do
 
   @callback handlers() :: %{required(String.t()) => module()}
   @callback gettext() :: module() | nil
+  @callback handle_error(Exception.t(), Phoenix.Socket.t(), map()) :: Phoenix.Socket.t()
 
   defmacro __using__(_opts) do
     quote do
       @behaviour Frankt
 
       def handle_in("frankt-action", params = %{"action" => action}, socket) do
-        [handler_name, handler_fn] = String.split(action, ":")
-        handler_module = Frankt.__handler__(__MODULE__, handler_name)
-        gettext = Frankt.__gettext__(__MODULE__)
-        data = Map.get(params, "data", %{})
+        try do
+          [handler_name, handler_fn] = String.split(action, ":")
+          handler_module = Frankt.__handler__(__MODULE__, handler_name)
+          gettext = Frankt.__gettext__(__MODULE__)
+          data = Map.get(params, "data", %{})
 
-        Frankt.__execute_action__(
-          handler_module,
-          String.to_existing_atom(handler_fn),
-          data,
-          socket,
-          gettext
-        )
+          Frankt.__execute_action__(
+            handler_module,
+            String.to_existing_atom(handler_fn),
+            data,
+            socket,
+            gettext
+          )
 
-        {:noreply, socket}
+          {:noreply, socket}
+        rescue
+          error -> Frankt.__handle_error__(__MODULE__, error, socket, params)
+        end
       end
 
       def gettext(), do: nil
+
+      def handle_error(error, socket, params) do
+        nil
+      end
 
       defoverridable Frankt
     end
@@ -124,6 +133,14 @@ defmodule Frankt do
     else
       invoke_action.()
     end
+  end
+
+  @doc false
+  def __handle_error__(_module, _error, socket, _params) do
+    import Phoenix.Channel
+
+    push(socket, "frankt-error", %{})
+    {:noreply, socket}
   end
 
   @doc false
