@@ -68,8 +68,13 @@ defmodule Frankt do
   """
   @type response_handler :: (params :: map(), socket :: Phoenix.Socket.t() -> any())
 
+  @callback handlers() :: %{required(String.t()) => module()}
+  @callback gettext() :: module() | nil
+
   defmacro __using__(_opts) do
     quote do
+      @behaviour Frankt
+
       def handle_in("frankt-action", params = %{"action" => action}, socket) do
         [handler_name, handler_fn] = String.split(action, ":")
         handler_module = Frankt.__handler__(__MODULE__, handler_name)
@@ -86,6 +91,10 @@ defmodule Frankt do
 
         {:noreply, socket}
       end
+
+      def gettext(), do: nil
+
+      defoverridable Frankt
     end
   end
 
@@ -119,13 +128,7 @@ defmodule Frankt do
 
   @doc false
   def __handler__(frankt_module, name) when is_binary(name) do
-    handlers = Application.get_env(:frankt, frankt_module)
-
-    if is_nil(handlers) do
-      raise "You have not configured any handlers for Frankt. Please set at least one handler in your configuration."
-    end
-
-    case get_in(handlers, [:handlers, String.to_existing_atom(name)]) do
+    case Map.get(frankt_module.handlers(), name) do
       nil ->
         "Frankt can not find a handler for '#{name}'. Please, chech that you are using the correct name or define a new handler in your configuration."
 
@@ -135,9 +138,5 @@ defmodule Frankt do
   end
 
   @doc false
-  def __gettext__(frankt_module) do
-    :frankt
-    |> Application.get_env(frankt_module, [])
-    |> Keyword.get(:gettext)
-  end
+  def __gettext__(frankt_module), do: frankt_module.gettext()
 end
