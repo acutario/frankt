@@ -99,12 +99,14 @@ defmodule Frankt do
 
         {:noreply, socket}
       rescue
-        error -> Frankt.__handle_error__(__MODULE__, error, socket, params)
+        error -> handle_error(error, socket, params)
       end
 
       def gettext(), do: nil
 
-      def handle_error(_error, _socket, _params), do: nil
+      def handle_error(error, socket, params) do
+        Frankt.__handle_error__(__MODULE__, error, socket, params)
+      end
 
       defoverridable Frankt
     end
