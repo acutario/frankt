@@ -66,11 +66,18 @@ defmodule Frankt do
   Since handler functions are simply annonymous functions every language rule (such as pattern
   matching) applies.
   """
+  import Phoenix.Channel
+
+  alias Frankt.ConfigurationError
+
+  require Logger
+
   @type response_handler :: (params :: map(), socket :: Phoenix.Socket.t() -> any())
 
   @callback handlers() :: %{required(String.t()) => module()}
   @callback gettext() :: module() | nil
-  @callback handle_error(Exception.t(), Phoenix.Socket.t(), map()) :: Phoenix.Socket.t()
+  @callback handle_error(error :: Exception.t(), socket :: Phoenix.Socket.t(), params :: map()) ::
+              Phoenix.Socket.t()
 
   defmacro __using__(_opts) do
     quote do
@@ -99,9 +106,7 @@ defmodule Frankt do
 
       def gettext(), do: nil
 
-      def handle_error(error, socket, params) do
-        nil
-      end
+      def handle_error(_error, _socket, _params), do: nil
 
       defoverridable Frankt
     end
@@ -111,9 +116,12 @@ defmodule Frankt do
   def __execute_action__(module, fun, params, socket, gettext) do
     invoke_action = fn ->
       unless function_exported?(module, fun, 2) do
-        raise "Frankt is trying to execute an action, but the handler module does not define the appropriate function. Please define a '#{
-                fun
-              }/2' function in your ·#{module} module."
+        raise ConfigurationError,
+          module: module,
+          message:
+            "Frankt is trying to execute an action, but the handler module does not define the appropriate function. Please define a '#{
+              fun
+            }/2' function in your ·#{module} module."
       end
 
       apply(module, fun, [params, socket])
@@ -123,7 +131,10 @@ defmodule Frankt do
       locale =
         case Map.get(socket.assigns, :locale) do
           nil ->
-            raise "You have configured Frankt to use Gettext for i18n, but the response does not know which locale to use. Please store the desired locale into a `locale` assign in the socket."
+            raise ConfigurationError,
+              module: module,
+              message:
+                "You have configured Frankt to use Gettext for i18n, but the response does not know which locale to use. Please store the desired locale into a `locale` assign in the socket."
 
           locale ->
             locale
@@ -136,10 +147,18 @@ defmodule Frankt do
   end
 
   @doc false
-  def __handle_error__(_module, _error, socket, _params) do
-    import Phoenix.Channel
+  def __handle_error__(_module, error, socket, _params) do
+    message =
+      case error do
+        %ConfigurationError{} -> "frankt-configuration-error"
+        _ -> "frankt-error"
+      end
 
-    push(socket, "frankt-error", %{})
+    :error
+    |> Exception.format(error)
+    |> Logger.error()
+
+    push(socket, message, %{})
     {:noreply, socket}
   end
 
@@ -147,7 +166,10 @@ defmodule Frankt do
   def __handler__(frankt_module, name) when is_binary(name) do
     case Map.get(frankt_module.handlers(), name) do
       nil ->
-        "Frankt can not find a handler for '#{name}'. Please, chech that you are using the correct name or define a new handler in your configuration."
+        raise ConfigurationError,
+          module: frankt_module,
+          message:
+            "Frankt can not find a handler for '#{name}'. Please, chech that you are using the correct name or define a new handler in your configuration."
 
       handler ->
         handler

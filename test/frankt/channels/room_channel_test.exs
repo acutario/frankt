@@ -22,11 +22,11 @@ defmodule Frankt.TestApplication.FranktChannelTest do
 
   test "invokes a non existing handler", %{socket: socket} do
     frankt_action(socket, "non_existing_handler:non_existing", %{})
-    assert_push("frankt-error", %{})
+    assert_push("frankt-configuration-error", %{})
   end
 
   test "invokes a non existing action", %{socket: socket} do
     frankt_action(socket, "frankt_actions:non_existing", %{})
-    assert_push("frankt-error", %{})
+    assert_push("frankt-configuration-error", %{})
   end
 end
