@@ -15,17 +15,28 @@ defmodule Frankt.TestApplication.FranktChannelTest do
     {:ok, socket: socket}
   end
 
-  test "runs a Frankt action", %{socket: socket} do
+  test "invoking an action handler results in a proper message", %{socket: socket} do
     frankt_action(socket, "frankt_actions:redirect", %{})
     assert_push("redirect", %{target: "/"})
   end
 
-  test "invokes a non existing handler", %{socket: socket} do
+  test "invoking an action handler with faulty logic results in an error message", %{
+    socket: socket
+  } do
+    frankt_action(socket, "frankt_actions:break", %{})
+    assert_push("frankt-error", %{})
+  end
+
+  test "invoking a non existing handler results in a configuration error message", %{
+    socket: socket
+  } do
     frankt_action(socket, "non_existing_handler:non_existing", %{})
     assert_push("frankt-configuration-error", %{})
   end
 
-  test "invokes a non existing action", %{socket: socket} do
+  test "invoking a non existing action results in a configuration error message", %{
+    socket: socket
+  } do
     frankt_action(socket, "frankt_actions:non_existing", %{})
     assert_push("frankt-configuration-error", %{})
   end
