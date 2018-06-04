@@ -66,10 +66,23 @@ defmodule Frankt do
   Since handler functions are simply annonymous functions every language rule (such as pattern
   matching) applies.
   """
+  import Phoenix.Channel
+
+  alias Frankt.ConfigurationError
+
+  require Logger
+
   @type response_handler :: (params :: map(), socket :: Phoenix.Socket.t() -> any())
+
+  @callback handlers() :: %{required(String.t()) => module()}
+  @callback gettext() :: module() | nil
+  @callback handle_error(error :: Exception.t(), socket :: Phoenix.Socket.t(), params :: map()) ::
+              Phoenix.Socket.t()
 
   defmacro __using__(_opts) do
     quote do
+      @behaviour Frankt
+
       def handle_in("frankt-action", params = %{"action" => action}, socket) do
         [handler_name, handler_fn] = String.split(action, ":")
         handler_module = Frankt.__handler__(__MODULE__, handler_name)
@@ -85,7 +98,17 @@ defmodule Frankt do
         )
 
         {:noreply, socket}
+      rescue
+        error -> handle_error(error, socket, params)
       end
+
+      def gettext(), do: nil
+
+      def handle_error(error, socket, params) do
+        Frankt.__handle_error__(__MODULE__, error, socket, params)
+      end
+
+      defoverridable Frankt
     end
   end
 
@@ -93,9 +116,12 @@ defmodule Frankt do
   def __execute_action__(module, fun, params, socket, gettext) do
     invoke_action = fn ->
       unless function_exported?(module, fun, 2) do
-        raise "Frankt is trying to execute an action, but the handler module does not define the appropriate function. Please define a '#{
-                fun
-              }/2' function in your ·#{module} module."
+        raise ConfigurationError,
+          module: module,
+          message:
+            "Frankt is trying to execute an action, but the handler module does not define the appropriate function. Please define a '#{
+              fun
+            }/2' function in your ·#{module} module."
       end
 
       apply(module, fun, [params, socket])
@@ -105,7 +131,10 @@ defmodule Frankt do
       locale =
         case Map.get(socket.assigns, :locale) do
           nil ->
-            raise "You have configured Frankt to use Gettext for i18n, but the response does not know which locale to use. Please store the desired locale into a `locale` assign in the socket."
+            raise ConfigurationError,
+              module: module,
+              message:
+                "You have configured Frankt to use Gettext for i18n, but the response does not know which locale to use. Please store the desired locale into a `locale` assign in the socket."
 
           locale ->
             locale
@@ -118,16 +147,29 @@ defmodule Frankt do
   end
 
   @doc false
+  def __handle_error__(_module, error, socket, _params) do
+    message =
+      case error do
+        %ConfigurationError{} -> "frankt-configuration-error"
+        _ -> "frankt-error"
+      end
+
+    :error
+    |> Exception.format(error)
+    |> Logger.error()
+
+    push(socket, message, %{})
+    {:noreply, socket}
+  end
+
+  @doc false
   def __handler__(frankt_module, name) when is_binary(name) do
-    handlers = Application.get_env(:frankt, frankt_module)
-
-    if is_nil(handlers) do
-      raise "You have not configured any handlers for Frankt. Please set at least one handler in your configuration."
-    end
-
-    case get_in(handlers, [:handlers, String.to_existing_atom(name)]) do
+    case Map.get(frankt_module.handlers(), name) do
       nil ->
-        "Frankt can not find a handler for '#{name}'. Please, chech that you are using the correct name or define a new handler in your configuration."
+        raise ConfigurationError,
+          module: frankt_module,
+          message:
+            "Frankt can not find a handler for '#{name}'. Please, chech that you are using the correct name or define a new handler in your configuration."
 
       handler ->
         handler
@@ -135,9 +177,5 @@ defmodule Frankt do
   end
 
   @doc false
-  def __gettext__(frankt_module) do
-    :frankt
-    |> Application.get_env(frankt_module, [])
-    |> Keyword.get(:gettext)
-  end
+  def __gettext__(frankt_module), do: frankt_module.gettext()
 end

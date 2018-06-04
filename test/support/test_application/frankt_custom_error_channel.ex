@@ -1,4 +1,4 @@
-defmodule Frankt.TestApplication.FranktChannel do
+defmodule Frankt.TestApplication.FranktCustomErrorChannel do
   @moduledoc false
 
   use Phoenix.Channel
@@ -9,5 +9,10 @@ defmodule Frankt.TestApplication.FranktChannel do
 
   def handlers do
     %{"frankt_actions" => Frankt.TestApplication.FranktActions}
+  end
+
+  def handle_error(_error, socket, _params) do
+    push(socket, "custom-error-handled", %{})
+    {:noreply, socket}
   end
 end
