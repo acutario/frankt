@@ -29,7 +29,8 @@ defmodule Frankt.Mixfile do
     [
       {:phoenix, "~> 1.3"},
       {:gettext, "~> 0.13", optional: true},
-      {:ex_doc, "~> 0.18.1", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.18.1", only: :dev, runtime: false},
+      {:credo, "~> 0.9.2", only: :dev}
     ]
   end
 
