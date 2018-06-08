@@ -13,7 +13,7 @@ defmodule Frankt.TestApplication.FranktPlugChannel do
 
   def plugs do
     [
-      Frankt.TestApplication.Plug
+      {Frankt.TestApplication.Plug, %{message: "the-plug-is-running"}}
     ]
   end
 end

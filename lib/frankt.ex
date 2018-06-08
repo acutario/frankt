@@ -120,10 +120,13 @@ defmodule Frankt do
     socket =
       [@pre_plugs, module.plugs(), @post_plugs]
       |> List.flatten()
-      |> Enum.reduce(socket, & &1.call(&2, nil))
+      |> Enum.reduce(socket, &__run_plug__/2)
 
     {:noreply, socket}
   end
+
+  def __run_plug__({module, opts}, socket), do: module.call(socket, opts)
+  def __run_plug__(module, socket), do: __run_plug__({module, nil}, socket)
 
   @doc false
   def __handle_error__(error, socket, _params) do
