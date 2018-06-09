@@ -98,7 +98,7 @@ defmodule Frankt do
 
       def handle_error(error, socket, params), do: Frankt.__handle_error__(error, socket, params)
 
-      def gettext(), do: nil
+      def gettext, do: nil
 
       def plugs, do: []
 
