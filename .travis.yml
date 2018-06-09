@@ -3,5 +3,6 @@ elixir: 1.6
 before_script:
   - mix compile --warnings-as-errors
   - mix format --check-formatted
+  - mix credo --format=oneline
 script:
   - mix test
