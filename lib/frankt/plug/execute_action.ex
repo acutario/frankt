@@ -24,7 +24,9 @@ defmodule Frankt.Plug.ExecuteAction do
     raise ConfigurationError,
       module: frankt_module,
       message:
-        "You have configured Frankt to use Gettext for i18n, but the response does not know which locale to use. Please store the desired locale into a `locale` assign in the socket."
+        "You have configured Frankt to use Gettext for i18n," <>
+          " but the response does not know which locale to use." <>
+          " Please store the desired locale into a `locale` assign in the socket."
   end
 
   defp invoke_action(
@@ -40,9 +42,9 @@ defmodule Frankt.Plug.ExecuteAction do
       raise ConfigurationError,
         module: frankt_module,
         message:
-          "Frankt is trying to execute an action, but the handler module does not define the appropriate function. Please define a '#{
-            handler_fn
-          }/2' function in your #{handler_module} module."
+          "Frankt is trying to execute an action," <>
+            " but the handler module does not define the appropriate function." <>
+            " Please define a '#{handler_fn}/2' function in your #{handler_module} module."
     end
 
     apply(handler_module, handler_fn, [frankt_data, socket])

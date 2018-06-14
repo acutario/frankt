@@ -29,6 +29,8 @@ defmodule Frankt.Plug.SetHandler do
     raise ConfigurationError,
       module: module,
       message:
-        "Frankt can not find a handler for '#{handler_name}'. Please, chech that you are using the correct name or define a new handler in your configuration."
+        "Frankt can not find a handler for '#{handler_name}'." <>
+          " Please, chech that you are using the correct name" <>
+          " or define a new handler in your configuration."
   end
 end
