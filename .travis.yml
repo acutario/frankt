@@ -6,3 +6,5 @@ before_script:
   - mix credo --format=oneline
 script:
   - mix test
+notifications:
+  email: false
