@@ -1,11 +1,15 @@
 import * as Dom from './dom';
-import {Socket} from 'phoenix';
+import {
+  Socket
+} from 'phoenix';
 
 export let channel = {};
 
 export function sendMsg(action, data) {
-  if (channel.state === 'closed') init(true);
-  return channel.push('frankt-action', {action: action, data: data});
+  return channel.push('frankt-action', {
+    action: action,
+    data: data
+  });
 }
 
 export function serializeForm(element) {
@@ -16,7 +20,7 @@ export function serializeForm(element) {
   }
 
   if (element.dataset.franktData) {
-    data.push($(element).data('franktData'));
+    data.push(JSON.parse(element.dataset.franktData));
   }
 
   if (element.dataset.franktTarget) {
@@ -28,7 +32,9 @@ export function serializeForm(element) {
       return target.reportValidity();
     }
 
-    data.push(Dom.serialize(target, {hash: true}));
+    data.push(Dom.serialize(target, {
+      hash: true
+    }));
   }
 
   return Object.assign(...data);
@@ -65,12 +71,14 @@ function attachEvents() {
 
 // Connect to the socket and join the Frankt channel.
 export function connect(channel_name, socket_params) {
-  const socket = new Socket('/socket', { params: socket_params });
+  const socket = new Socket('/socket', {
+    params: socket_params
+  });
   socket.connect();
   channel = socket.channel(channel_name, {});
   return channel.join()
     .receive("ok", res => {
-      attachEvents()
+      attachEvents();
       attachResponses();
       console.log("Connected to Frankt");
     })

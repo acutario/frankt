@@ -12,6 +12,75 @@ export function needValidation(element, target) {
   return target.nodeName === "FORM" && !target.checkValidity();
 }
 
+function parse_keys(string) {
+  const keys = [];
+  const prefix = /^([^\[\]]*)/;
+  const children = new RegExp(brackets);
+  let match = prefix.exec(string);
+
+  if (match[1]) {
+    keys.push(match[1]);
+  }
+
+  while ((match = children.exec(string)) !== null) {
+    keys.push(match[1]);
+  }
+
+  return keys;
+}
+
+
+function hash_assign(result, keys, value) {
+  if (keys.length === 0) {
+    result = value;
+    return result;
+  }
+
+  const key = keys.shift();
+  const between = key.match(/^\[(.+?)\]$/);
+
+  if (key === '[]') {
+    result = result || [];
+
+    if (Array.isArray(result)) {
+      result.push(hash_assign(null, keys, value));
+    } else {
+      // This might be the result of bad name attributes like "[][foo]",
+      // in this case the original `result` object will already be
+      // assigned to an object literal. Rather than coerce the object to
+      // an array, or cause an exception the attribute "_values" is
+      // assigned as an array.
+      result._values = result._values || [];
+      result._values.push(hash_assign(null, keys, value));
+    }
+
+    return result;
+  }
+
+  // Key is an attribute name and can be assigned directly.
+  if (!between) {
+    result[key] = hash_assign(result[key], keys, value);
+  } else {
+    const string = between[1];
+    // +var converts the variable into a number
+    // better than parseInt because it doesn't truncate away trailing
+    // letters and actually fails if whole thing is not a number
+    const index = +string;
+
+    // If the characters between the brackets is not a number it is an
+    // attribute name and can be assigned directly.
+    if (isNaN(index)) {
+      result = result || {};
+      result[string] = hash_assign(result[string], keys, value);
+    } else {
+      result = result || [];
+      result[index] = hash_assign(result[index], keys, value);
+    }
+  }
+
+  return result;
+}
+
 // Object/hash encoding serializer.
 function serializer(result, key, value) {
   const matches = key.match(brackets);
@@ -148,7 +217,7 @@ export function serialize(form, options) {
 
   // Check for all empty radio buttons and serialize them with key=""
   if (options.empty) {
-    for (var key in radio_store) {
+    for (let key in radio_store) {
       if (!radio_store[key]) {
         result = serializer(result, key, '');
       }
@@ -158,80 +227,12 @@ export function serialize(form, options) {
   return deepCompact(result);
 }
 
-function parse_keys(string) {
-  const keys = [];
-  const prefix = /^([^\[\]]*)/;
-  const children = new RegExp(brackets);
-  let match = prefix.exec(string);
-
-  if (match[1]) {
-    keys.push(match[1]);
-  }
-
-  while ((match = children.exec(string)) !== null) {
-    keys.push(match[1]);
-  }
-
-  return keys;
-}
-
-function hash_assign(result, keys, value) {
-  if (keys.length === 0) {
-    result = value;
-    return result;
-  }
-
-  const key = keys.shift();
-  const between = key.match(/^\[(.+?)\]$/);
-
-  if (key === '[]') {
-    result = result || [];
-
-    if (Array.isArray(result)) {
-      result.push(hash_assign(null, keys, value));
-    } else {
-      // This might be the result of bad name attributes like "[][foo]",
-      // in this case the original `result` object will already be
-      // assigned to an object literal. Rather than coerce the object to
-      // an array, or cause an exception the attribute "_values" is
-      // assigned as an array.
-      result._values = result._values || [];
-      result._values.push(hash_assign(null, keys, value));
-    }
-
-    return result;
-  }
-
-  // Key is an attribute name and can be assigned directly.
-  if (!between) {
-    result[key] = hash_assign(result[key], keys, value);
-  } else {
-    const string = between[1];
-    // +var converts the variable into a number
-    // better than parseInt because it doesn't truncate away trailing
-    // letters and actually fails if whole thing is not a number
-    const index = +string;
-
-    // If the characters between the brackets is not a number it is an
-    // attribute name and can be assigned directly.
-    if (isNaN(index)) {
-      result = result || {};
-      result[string] = hash_assign(result[string], keys, value);
-    } else {
-      result = result || [];
-      result[index] = hash_assign(result[index], keys, value);
-    }
-  }
-
-  return result;
-}
-
 export function serializeElement(element) {
   if (element) {
-    return serializer({}, element.name, element.value)
+    return serializer({}, element.name, element.value);
   } else {
     console.log('Element not found', element);
-    return {}
+    return {};
   }
 }
 
