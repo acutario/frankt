@@ -47,6 +47,7 @@ defmodule Frankt.Mixfile do
       extras: [
         "README.md": [filename: "README.md", title: "Introduction"],
         "guides/Concepts.md": [],
+        "guides/Client.md": [filename: "Client.md", title: "Client side"],
         "guides/Examples.md": []
       ],
       groups_for_modules: [Testing: [Frankt.ActionTest]],
