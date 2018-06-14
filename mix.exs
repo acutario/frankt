@@ -44,6 +44,7 @@ defmodule Frankt.Mixfile do
   # Run "mix help docs" to learn about documentation.
   defp docs do
     [
+      logo: "logo.png",
       extras: [
         "README.md": [filename: "README.md", title: "Introduction"],
         "guides/Concepts.md": [],
