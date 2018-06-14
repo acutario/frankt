@@ -1,27 +1,23 @@
 defmodule Frankt.ActionTest do
   @moduledoc """
   Conveniences for testing Frankt actions.
+  You can `import Frankt.ActionTest` in your test cases having easy access to the helpers provided
+  by this module.
 
-  Frankt tests are actually channel tests. For more information take a look at
-  `Phoenix.ChannelTest`.
+  Frankt tests are channel tests, so the same helpers and principles apply. For more information
+  take a look at `Phoenix.ChannelTest`.
   """
-
-  @doc false
-  defmacro __using__(_opts) do
-    quote do
-      import Frankt.ActionTest
-    end
-  end
 
   @doc """
-  Call a Frankt action.
+  Invoke a Frankt action.
 
-  Pushes a mesasge into the channel which triggers the Frankt `handle_in/3` function and then
-  dispatches to the corresponding action.
-  After pushing the message to Frankt you can check the response by using
+  Underneath, this function pushes a message into the Frankt channel so it can be dispatched by the
+  corresponding action.
+  After the message is pushed into the Frankt channel, you can check the response by using
   `Phoenix.ChannelTest.assert_push/3`.
   """
-  @spec frankt_action(socket :: Socket.t(), action :: String.t(), payload :: map()) :: reference()
+  @spec frankt_action(socket :: Phoenix.Socket.t(), action :: String.t(), payload :: map()) ::
+          reference()
   defmacro frankt_action(socket, action, payload \\ %{}) do
     quote do
       push(unquote(socket), "frankt-action", %{action: unquote(action), data: unquote(payload)})

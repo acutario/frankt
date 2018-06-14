@@ -7,7 +7,8 @@ defmodule Frankt.ChannelCase do
     quote do
       # Import conveniences for testing with channels
       use Phoenix.ChannelTest
-      use Frankt.ActionTest
+
+      import Frankt.ActionTest
 
       # The default endpoint for testing
       @endpoint Frankt.TestApplication.Endpoint

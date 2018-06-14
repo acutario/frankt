@@ -1,12 +1,14 @@
 defmodule Frankt do
   @moduledoc """
-  Trigger client-side commands from the server.
+  Run client-side actions from the backend.
 
-  Frankt allows you to define websocket responses that will trigger commands in the clients.
-  Responses run on the server and leverage all the Elixir and Phoenix capabilities. A thin JS layer
-  applies the desired commands in the clients.
+  Frankt provides a thin layer over Phoenix Channels which allows running client-side actions
+  from the backend. Since the logic of those actions lives in the backend, they can leverage all the
+  `Elixir` and `Phoenix` capabilities.
 
   ## Usage
+
+  Frankt modules are actually `Phoenix.Channel` modules with some extra functionality.
 
   Frankt modules must define responses that are triggered by client-side actions.
 

@@ -1,15 +1,17 @@
+# Runs the action handler for the incoming Frankt action.
+
 defmodule Frankt.Plug.ExecuteAction do
-  @moduledoc """
-  Runs the user handler for the incoming Frankt action.
-  """
+  @moduledoc false
   @behaviour Frankt.Plug
 
   alias Frankt.ConfigurationError
 
+  @impl true
   def call(socket = %{private: %{frankt_gettext: nil}}, _opts) do
     invoke_action(socket)
   end
 
+  @impl true
   def call(socket = %{private: %{frankt_gettext: gettext}, assigns: %{locale: locale}}, _opts)
       when is_binary(locale) or is_atom(locale) do
     Gettext.with_locale(gettext, locale, fn ->
@@ -17,6 +19,7 @@ defmodule Frankt.Plug.ExecuteAction do
     end)
   end
 
+  @impl true
   def call(%{private: %{frankt_module: frankt_module}}, _opts) do
     raise ConfigurationError,
       module: frankt_module,

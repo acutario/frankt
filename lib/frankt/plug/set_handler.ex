@@ -1,14 +1,15 @@
-defmodule Frankt.Plug.SetHandler do
-  @moduledoc """
-  Sets the Frankt handler information for the incoming action.
+# Sets the Frankt handler information for the incoming action.
+# The handler is stored under the `frankt_handler` key in the form of a
+# `{handler_module, handler_fn}` tuple.
 
-  The handler is stored under the `frankt_handler` key in the form of a
-  `{handler_module, handler_fn}` tuple.
-  """
+defmodule Frankt.Plug.SetHandler do
+  @moduledoc false
   @behaviour Frankt.Plug
 
   alias Frankt.ConfigurationError
 
+  @impl true
+  @doc false
   def call(socket = %{private: %{frankt_action: action} = private}, _opts) do
     [handler_name, handler_fn] = String.split(action, ":")
     handler = {handler(socket, handler_name), String.to_existing_atom(handler_fn)}

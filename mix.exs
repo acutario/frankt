@@ -49,6 +49,7 @@ defmodule Frankt.Mixfile do
         "guides/Concepts.md": [],
         "guides/Examples.md": []
       ],
+      groups_for_modules: [Testing: [Frankt.ActionTest]],
       main: "README.md"
     ]
   end
