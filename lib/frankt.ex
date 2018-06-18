@@ -2,80 +2,103 @@ defmodule Frankt do
   @moduledoc """
   Run client-side actions from the backend.
 
-  Frankt provides a thin layer over Phoenix Channels which allows running client-side actions
+  Frankt provides a thin layer over Phoenix channels which allows running client-side actions
   from the backend. Since the logic of those actions lives in the backend, they can leverage all the
-  `Elixir` and `Phoenix` capabilities.
+  [`Elixir`][1] and `Phoenix` capabilities.
 
-  ## Usage
+  ## Basic Usage
 
-  Frankt modules are actually `Phoenix.Channel` modules with some extra functionality.
+  As explained before Frankt channels are actually Phoenix channels which `use Frankt`. You can find
+  more information about setting up channels and wiring them into sockets in the `Phoenix.Channel`
+  docs.
 
-  Frankt modules must define responses that are triggered by client-side actions.
+  Frankt channels implement the `Frankt` behaviour and therefore must export a `handlers/0`
+  function which returns a map containing the modules which will handle incoming actions. We call
+  those modules "_action handlers_". Action handlers would be the Frankt equivalent to Phoenix
+  controllers.
 
-  ```
-  defmodule MyApp.Frankt.Example do
-    use Frankt
+  This example shows a very basic Frankt channel which allows any connection and registers a single
+  action handler.
 
-    defresponse "example:replace-message", fn (params, socket) ->
-      push socket, "replace_with", %{html: "<h1>Replaced message</h1>", target: "#message"}
-    end
-  end
-  ```
+      defmodule MyApp.FranktChannel do
+        use Phoenix.Channel
+        use Frankt
 
-  Then, you must make sure that the responses are available in the channel by adding the following
-  line:
+        def join(_topic, _payload, socket), do: {:ok, socket}
 
-  ```
-  # Add this line into your channel module.
-  use MyApp.Frankt.Example
-  ```
+        def handlers, do: %{"example_actions" => MyApp.FranktExampleActions}
+      end
 
-  ## Usage with Gettext
+  When messages arrive to our channel, Frankt automatically checks if there is any matching action
+  handler registered and runs it.
 
-  By default Frankt actions don't use internationalization. If you want your responses to be
-  executed under a certain locale, you must set up the Gettext module that must be used by Frankt.
+  This example shows a very basic action handler with a single action. Action handlers can run
+  business logic, render templates, push or broadcast messages into the channel, etc.
 
-  ```
-  defmodule MyApp.Frankt.Example do
-    use Frankt, gettext: MyApp.Gettext
+      defmodule MyApp.FranktExampleActions do
+        import Phoenix.Channel
+        import MyApp.Router.Helpers
 
-    # Define your responses as usual and they will be automatically executed with the adequate
-    locale.
-  end
-  ```
+        def redirect_to_home(_params, socket), do: push(socket, "redirect", %{target: "/"})
+      end
 
-  Frankt will try to get the locale from the `locale` socket assign. You must ensure that this
-  assign is set in the socket before executing Frankt responses.
+  Frankt channels can also customize other advanced aspects such as i18n, plugs and error handlers.
 
-  ## More information and examples
+  ### Setting up i18n
 
-  If you want more information about how to use Frankt, please take a look at the
-  [concepts guide](https://hexdocs.pm/frankt/concepts.html) and the
-  [examples](https://hexdocs.pm/frankt/examples.html).
+  Frankt can optionally use `Gettext` to internationalize rendered templated and messages just like
+  Phoenix controllers do. To set up the `Gettext` integration, your Frankt channel must implement
+  the `gettext/0` callback.
+
+  We can add the following line to our example Frankt channel:
+
+      def gettext, do: MyApp.Gettext
+
+  Now the action handlers registered in our Frankt channel will automatically use `MyApp.Gettext`
+  to internationalize texts.
+
+  To know which locale to use in the action handlers Frankt needs a `locale` assigned into the
+  socket. A great place to assign a locale to the socket would be a Frankt plug.
+
+  ### Setting up plugs
+
+  Frankt channels can run certain modules to modify the socket before the action handler is executed.
+  Those modules are known as Frankt plugs because they are somewhat similar to our beloved `Plug`.
+
+  We can register plugs in our Frankt channel by implementing the `plugs` callback:
+
+      def plugs, do: [MyApp.FranktLocalePlug]
+
+  Frankt plugs must implement the `Frankt.Plug` behaviour, which them to export a `call/2` function
+  which returns a `Phoenix.Socket`.
+
+  The following example shows a very basic plug that could set up the locale to use in our action
+  handlers.
+
+      defmodule MyApp.FranktLocalePlug do
+        @behaviour Frankt.Plug
+
+        @impl true
+        def call(socket = %{assigns: assigns}, opts) do
+          %{socket | assigns: Map.put(assigns, :locale, assigns.current_user.locale)}
+        end
+      end
+
+  Just like `Plug`, Frankt plugs are run sequentially and each one receives the socket returned by
+  the previous plug.
+
+  Frankt functionality is also implemented as plugs. You can take a look at them into the
+  `lib/frankt/plug` directory to see some examples.
+
+  [1]: https://hexdocs.pm/elixir/Kernel.html
   """
 
-  @typedoc """
-  Annonymous function that handles responses.
-
-  Handler functions receive two parameters: the first one is the map of parameters sent by the
-  client (or empty if none) and the second one is the socket to which the client is connected.
-
-  Handler functions don't have to return anything, as their return value will be discarded. The
-  handler function can `push` many actions to the socket so they will be executed in the client. The
-  `push` can happen anywhere inside the function, the preferred approach is to push as soon as
-  possible in order to provide quick feedback.
-
-  Since handler functions are simply annonymous functions every language rule (such as pattern
-  matching) applies.
-  """
   import Phoenix.Channel
 
   alias Frankt.ConfigurationError
   alias Frankt.Plug
 
   require Logger
-
-  @type response_handler :: (params :: map(), socket :: Phoenix.Socket.t() -> any())
 
   @callback handlers() :: %{required(String.t()) => module()}
   @callback gettext() :: module() | nil
