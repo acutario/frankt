@@ -45,14 +45,18 @@ defmodule Frankt.Mixfile do
   defp docs do
     [
       logo: "logo.png",
+      main: "overview",
       extras: [
-        "README.md": [filename: "README.md", title: "Introduction"],
-        "guides/Concepts.md": [],
-        "guides/Client.md": [filename: "Client.md", title: "Client side"],
-        "guides/Examples.md": []
+        "guides/introduction/overview.md",
+        "guides/docs/Concepts.md": [],
+        "guides/docs/Client.md": [filename: "Client.md", title: "Client side"],
+        "guides/docs/Examples.md": []
       ],
       groups_for_modules: [Testing: [Frankt.ActionTest]],
-      main: "README.md"
+      groups_for_extras: [
+        Introduction: ~r/guides\/introduction\/[^\/]+\.md/,
+        Guides: ~r/guides\/docs\/[^\/]+\.md/
+      ]
     ]
   end
 
