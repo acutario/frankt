@@ -71,18 +71,18 @@ defmodule Frankt do
 
       def plugs, do: [MyApp.FranktLocalePlug]
 
-  Frankt plugs must implement the `Frankt.Plug` behaviour, which them to export a `call/2` function
-  which returns a `Phoenix.Socket`.
+  Frankt plugs implement the `Frankt.Plug` behaviour so they must to export a `call/2`
+  function which returns a `Phoenix.Socket`.
 
   The following example shows a very basic plug that could set up the locale to use in our action
   handlers.
 
       defmodule MyApp.FranktLocalePlug do
-        @behaviour Frankt.Plug
+        use Frankt.Plug
 
         @impl true
         def call(socket = %{assigns: assigns}, opts) do
-          %{socket | assigns: Map.put(assigns, :locale, assigns.current_user.locale)}
+          assign(socket, :locale, assigns.current_user.locale)
         end
       end
 

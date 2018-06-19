@@ -4,7 +4,7 @@
 
 defmodule Frankt.Plug.SetHandler do
   @moduledoc false
-  @behaviour Frankt.Plug
+  use Frankt.Plug
 
   alias Frankt.ConfigurationError
 

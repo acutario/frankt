@@ -2,7 +2,7 @@
 
 defmodule Frankt.Plug.ExecuteAction do
   @moduledoc false
-  @behaviour Frankt.Plug
+  use Frankt.Plug
 
   alias Frankt.ConfigurationError
 

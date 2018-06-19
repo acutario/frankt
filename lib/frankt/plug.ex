@@ -10,4 +10,12 @@ defmodule Frankt.Plug do
   """
 
   @callback call(socket :: Phoenix.Socket.t(), opts :: Plug.opts()) :: Phoenix.Socket.t()
+
+  defmacro __using__(_opts) do
+    quote do
+      @behaviour Frankt.Plug
+
+      import Phoenix.Socket, only: [assign: 3]
+    end
+  end
 end

@@ -3,7 +3,7 @@
 
 defmodule Frankt.Plug.SetGettext do
   @moduledoc false
-  @behaviour Frankt.Plug
+  use Frankt.Plug
 
   @impl true
   def call(socket = %{private: private = %{frankt_module: frankt_module}}, _opts) do

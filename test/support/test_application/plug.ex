@@ -1,6 +1,6 @@
 defmodule Frankt.TestApplication.Plug do
   @moduledoc false
-  @behaviour Frankt.Plug
+  use Frankt.Plug
 
   alias Phoenix.Channel
 
