@@ -44,6 +44,8 @@ defmodule Frankt do
 
   Frankt channels can also customize other advanced aspects such as i18n, plugs and error handlers.
 
+  ## Advanced Usage
+
   ### Setting up i18n
 
   Frankt can optionally use `Gettext` to internationalize rendered templated and messages just like
@@ -90,6 +92,28 @@ defmodule Frankt do
   Frankt functionality is also implemented as plugs. You can take a look at them into the
   `lib/frankt/plug` directory to see some examples.
 
+  ### Handling errors
+
+  Frankt catches any errors thay may happen while handling an incoming message. By default, those
+  errors are handled by pushing a `frankt-configuration-error` (in the case of
+  `Frankt.ConfigurationError`) or a `frankt-error` (in other cases) to the socket. Those messages
+  can be used to provide appropriate feedback in the client.
+
+  If you want to customize how errors are handled, you can implement the `handle_error/3` callback.
+  The `handle_error/3` callback receives the rescued error, the socket and the params of the
+  incoming message.
+
+  The following example shows a very basic error handler that redirects to the index in case of
+  any errors.
+
+      def handle_error(%Frankt.ConfigurationError{}, socket, _params) do
+        push(socket, "redirect", %{target: "/"})
+        {:noreply, socket}
+      end
+
+  If you choose to implement a custom error handler for your Frankt channel, keep in mind that it
+  must return some of the values specified in `c:Phoenix.Channel.handle_in/3`.
+
   [1]: https://hexdocs.pm/elixir/Kernel.html
   """
 
@@ -101,9 +125,12 @@ defmodule Frankt do
   require Logger
 
   @callback handlers() :: %{required(String.t()) => module()}
-  @callback gettext() :: module() | nil
+  @callback gettext() :: module()
   @callback handle_error(error :: Exception.t(), socket :: Phoenix.Socket.t(), params :: map()) ::
-              Phoenix.Socket.t()
+              {:noreply, Phoenix.Socket.t()}
+              | {:reply, Phoenix.Channel.reply(), Phoenix.Socket.t()}
+              | {:stop, reason :: term, Phoenix.Socket.t()}
+              | {:stop, reason :: term, Phoenix.Channel.reply(), Phoenix.Socket.t()}
   @callback plugs() :: list(module())
 
   @pre_plugs [Plug.SetHandler, Plug.SetGettext]
