@@ -1,4 +1,4 @@
-# Frankt
+# <img src="logo.png?raw=true" width="30" height="42" alt="Frankt"> Frankt
 > **Run client side actions from Phoenix**
 
 [![Build Status](https://travis-ci.org/acutario/frankt.svg?branch=master)](https://travis-ci.org/acutario/frankt)
