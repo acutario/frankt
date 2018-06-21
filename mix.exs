@@ -29,7 +29,8 @@ defmodule Frankt.Mixfile do
     [
       {:phoenix, "~> 1.3"},
       {:gettext, "~> 0.13", optional: true},
-      {:ex_doc, "~> 0.18.1", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.18.1", only: :dev, runtime: false},
+      {:credo, "~> 0.9.2", only: :dev}
     ]
   end
 
@@ -43,12 +44,19 @@ defmodule Frankt.Mixfile do
   # Run "mix help docs" to learn about documentation.
   defp docs do
     [
+      logo: "logo.png",
+      main: "overview",
       extras: [
-        "README.md": [filename: "README.md", title: "Introduction"],
-        "guides/Concepts.md": [],
-        "guides/Examples.md": []
+        "guides/introduction/overview.md",
+        "guides/docs/Concepts.md": [],
+        "guides/docs/Client.md": [filename: "Client.md", title: "Client side"],
+        "guides/docs/Examples.md": []
       ],
-      main: "README.md"
+      groups_for_modules: [Testing: [Frankt.ActionTest]],
+      groups_for_extras: [
+        Introduction: ~r/guides\/introduction\/[^\/]+\.md/,
+        Guides: ~r/guides\/docs\/[^\/]+\.md/
+      ]
     ]
   end
 

@@ -3,7 +3,15 @@
 # works fine.
 Code.ensure_loaded(Frankt.TestApplication.FranktActions)
 
-# Our Phoenix test application must be started before running the tests.
+# Configure and start our test application so it is accepting connection before
+# starting the tests.
+Application.put_env(
+  :frankt,
+  Frankt.TestApplication.Endpoint,
+  pubsub: [name: Frankt.TestApplication.PubSub, adapter: Phoenix.PubSub.PG2]
+)
+
 Frankt.TestApplication.start(:normal, [])
 
+# Run the test suite
 ExUnit.start()
