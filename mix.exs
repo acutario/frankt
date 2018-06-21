@@ -13,13 +13,15 @@ defmodule Frankt.Mixfile do
       deps: deps(),
       package: package(),
       docs: docs(),
-      elixirc_paths: elixirc_paths(Mix.env())
+      elixirc_paths: elixirc_paths(Mix.env()),
+      compilers: [:phoenix, :gettext] ++ Mix.compilers()
     ]
   end
 
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
+      mod: {Frankt.Application, []},
       extra_applications: [:logger]
     ]
   end
@@ -27,10 +29,14 @@ defmodule Frankt.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:phoenix, "~> 1.3"},
-      {:gettext, "~> 0.13", optional: true},
+      {:cowboy, "~> 1.0", only: [:dev, :test]},
+      {:credo, "~> 0.9.2", only: :dev},
       {:ex_doc, "~> 0.18.1", only: :dev, runtime: false},
-      {:credo, "~> 0.9.2", only: :dev}
+      {:gettext, "~> 0.11", only: [:dev, :test]},
+      {:phoenix_pubsub, "~> 1.0"},
+      {:phoenix, "~> 1.3.3"},
+      {:phoenix_html, "~> 2.10"},
+      {:phoenix_live_reload, "~> 1.0", only: :dev}
     ]
   end
 
@@ -62,5 +68,6 @@ defmodule Frankt.Mixfile do
 
   # Specifies paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(:dev), do: ["lib", "test/support"]
   defp elixirc_paths(_env), do: ["lib"]
 end

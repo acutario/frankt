@@ -11,7 +11,7 @@ defmodule Frankt.ChannelCase do
       import Frankt.ActionTest
 
       # The default endpoint for testing
-      @endpoint Frankt.TestApplication.Endpoint
+      @endpoint Frankt.TestApplicationOld.Endpoint
     end
   end
 end
