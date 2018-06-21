@@ -1,7 +1,7 @@
 # <img src="logo.png?raw=true" width="30" height="42" alt="Frankt"> Frankt
 > **Run client side actions from Phoenix**
 
-[![Build Status](https://travis-ci.org/acutario/frankt.svg?branch=master)](https://travis-ci.org/acutario/frankt)
+[![Build Status](https://travis-ci.com/acutario/frankt.svg?branch=master)](https://travis-ci.com/acutario/frankt)
 
 Frankt is a small package that allows you to run client side actions from your [Phoenix Framework][1] project.
 
