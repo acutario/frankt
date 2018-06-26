@@ -1,0 +1,4 @@
+<%= link "Back", to: page_path(@conn, :index) %>
+
+<%= filter_form(@conn) %>
+<%= render "_table.html", assigns %>

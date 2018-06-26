@@ -6,7 +6,8 @@ defmodule Frankt.TestApplication.FranktChannel do
 
   def handlers do
     %{
-      "greeting" => Frankt.TestApplication.FranktHandlers.Greeting
+      "greeting" => Frankt.TestApplication.FranktHandlers.Greeting,
+      "filter" => Frankt.TestApplication.FranktHandlers.Filter
     }
   end
 end

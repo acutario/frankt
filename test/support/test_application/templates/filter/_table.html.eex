@@ -1,0 +1,18 @@
+<table id="users">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Gender</th>
+      <th>Birth</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for user <- @users do %>
+      <tr>
+        <th><%= user.name %></th>
+        <th><%= user.gender %></th>
+        <th><%= user.birth %></th>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -18,6 +18,7 @@ defmodule Frankt.TestApplication.Router do
     pipe_through(:browser)
 
     get("/", PageController, :index)
+    get("/filter", FilterController, :index)
   end
 
   # Other scopes may use custom stacks.
