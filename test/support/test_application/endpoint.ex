@@ -10,7 +10,7 @@ defmodule Frankt.TestApplication.Endpoint do
   plug(
     Plug.Static,
     at: "/",
-    from: :frankt,
+    from: "test/support/test_application/priv/static",
     gzip: false,
     only: ~w(css fonts images js favicon.ico robots.txt)
   )

@@ -11,7 +11,7 @@ config :frankt, Frankt.TestApplication.Endpoint,
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
-  watchers: []
+  watchers: [npm: ["run", "watch"]]
 
 # ## SSL Support
 #
@@ -33,10 +33,10 @@ config :frankt, Frankt.TestApplication.Endpoint,
 config :frankt, Frankt.TestApplication.Endpoint,
   live_reload: [
     patterns: [
-      ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
-      ~r{priv/gettext/.*(po)$},
-      ~r{lib/test_application_web/views/.*(ex)$},
-      ~r{lib/test_application_web/templates/.*(eex)$}
+      ~r{test/support/test_application/priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
+      ~r{test/support/test_application/priv/gettext/.*(po)$},
+      ~r{test/support/test_application_web/views/.*(ex)$},
+      ~r{test/support/test_application_web/templates/.*(eex)$}
     ]
   ]
 

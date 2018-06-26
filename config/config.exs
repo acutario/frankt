@@ -5,6 +5,9 @@
 # is restricted to this project.
 use Mix.Config
 
+config :frankt,
+  namespace: Frankt.TestApplication
+
 # Configures the endpoint
 config :frankt, Frankt.TestApplication.Endpoint,
   url: [host: "localhost"],
