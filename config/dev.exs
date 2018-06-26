@@ -35,8 +35,8 @@ config :frankt, Frankt.TestApplication.Endpoint,
     patterns: [
       ~r{test/support/test_application/priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
       ~r{test/support/test_application/priv/gettext/.*(po)$},
-      ~r{test/support/test_application_web/views/.*(ex)$},
-      ~r{test/support/test_application_web/templates/.*(eex)$}
+      ~r{test/support/test_application/views/.*(ex)$},
+      ~r{test/support/test_application/templates/.*(eex)$}
     ]
   ]
 
