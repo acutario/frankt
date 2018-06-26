@@ -2,7 +2,7 @@ defmodule Frankt.TestApplication.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", Frankt.TestApplication.RoomChannel
+  channel("frankt:*", Frankt.TestApplication.FranktChannel)
 
   ## Transports
   transport(:websocket, Phoenix.Transports.WebSocket)

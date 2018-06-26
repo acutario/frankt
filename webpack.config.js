@@ -81,10 +81,11 @@ module.exports = {
   },
 
   resolve: {
-    // modules: [
-    //   path.join(source_path, 'test', 'support', 'test_application', 'assets'),
-    //   'node_modules'
-    // ],
+    modules: [
+      path.join(__dirname, 'priv', 'static'),
+      path.join(source_path, 'test', 'support', 'test_application', 'assets'),
+      'node_modules'
+    ],
     extensions: ['.js', '.scss']
   },
 
