@@ -5,6 +5,8 @@ defmodule Frankt.TestApplication.FranktChannel do
   def join("frankt:" <> _user_id, _params, socket), do: {:ok, socket}
 
   def handlers do
-    []
+    %{
+      "greeting" => Frankt.TestApplication.FranktHandlers.Greeting
+    }
   end
 end

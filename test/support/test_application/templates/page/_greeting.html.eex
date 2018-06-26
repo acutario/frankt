@@ -1,0 +1,3 @@
+<div id="greeting">
+  <%= if Map.get(assigns, :name), do: "Hello, #{assigns[:name]}" %>
+</div>
