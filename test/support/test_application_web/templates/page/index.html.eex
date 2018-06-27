@@ -1,6 +1,9 @@
 <h1>Hola mundo 2</h1>
 
-<%= link "Filtering a list of users", to: filter_path(@conn, :index) %>
+<ul>
+  <li><%= link "Filtering a list of users", to: filter_path(@conn, :index) %></li>
+  <li><%= link "Replacing a small portion of a form", to: form_path(@conn, :index) %></li>
+</ul>
 
 <%= form_for @conn, nil,  [id: "greet-form", as: :greet, csrf_token: false],  fn f -> %>
   <%= text_input f, :name %>

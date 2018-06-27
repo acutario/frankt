@@ -33,10 +33,10 @@ config :frankt, Frankt.TestApplicationWeb.Endpoint,
 config :frankt, Frankt.TestApplicationWeb.Endpoint,
   live_reload: [
     patterns: [
-      ~r{test/support/test_application/priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
-      ~r{test/support/test_application/priv/gettext/.*(po)$},
-      ~r{test/support/test_application/views/.*(ex)$},
-      ~r{test/support/test_application/templates/.*(eex)$}
+      ~r{test/support/test_application_web/priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
+      ~r{test/support/test_application_web/priv/gettext/.*(po)$},
+      ~r{test/support/test_application_web/views/.*(ex)$},
+      ~r{test/support/test_application_web/templates/.*(eex)$}
     ]
   ]
 
