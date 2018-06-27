@@ -2,7 +2,7 @@ defmodule Frankt.TestApplicationWeb.FranktHandlers.Greeting do
   import Phoenix.Channel
   import Frankt.Handler
 
-  alias Frankt.TestApplicationWeb.PageView, as: View
+  alias Frankt.TestApplicationWeb.GreetView, as: View
 
   def greet(%{"greet" => %{"name" => name}}, socket) do
     push(socket, "replace_with", %{

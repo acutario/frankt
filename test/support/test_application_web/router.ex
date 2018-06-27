@@ -18,6 +18,7 @@ defmodule Frankt.TestApplicationWeb.Router do
     pipe_through(:browser)
 
     get("/", PageController, :index)
+    get("/greet", GreetController, :index)
     get("/filter", FilterController, :index)
     resources("/form", FormController, only: [:index, :create])
   end

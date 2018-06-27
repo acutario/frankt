@@ -18,6 +18,14 @@
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
 
       <main role="main">
+
+        <nav>
+          <%= link "Home", to: page_path(@conn, :index) %>
+          <%= link "Greeting", to: greet_path(@conn, :index) %>
+          <%= link "Dynamic Form", to: form_path(@conn, :index) %>
+          <%= link "Filtering a list", to: filter_path(@conn, :index) %>
+        </nav>
+
         <%= render @view_module, @view_template, assigns %>
       </main>
 

@@ -1,0 +1,7 @@
+<h1><%= gettext("Greeting") %></h1>
+
+<%= form_for @conn, nil,  [id: "greet-form", as: :greet, csrf_token: false],  fn f -> %>
+  <%= text_input f, :name %>
+  <%= submit "Greet!", data: [frankt: [action: "greeting:greet", target: "#greet-form"]] %>
+<% end %>
+<%= render "_greeting.html" %>

@@ -1,4 +1,4 @@
-<%= link "Back", to: page_path(@conn, :index) %>
+<h1><%= gettext("Filtering a list") %></h1>
 
 <%= filter_form(@conn) %>
 <%= render "_table.html", assigns %>

@@ -1,4 +1,4 @@
-<%= link "Back", to: page_path(@conn, :index) %>
+<h1><%= gettext("Dynamic Form") %></h1>
 
 <%= form_for @changeset, form_path(@conn, :create), [id: "user-form"], fn f -> %>
   <div>
