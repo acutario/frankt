@@ -3,7 +3,6 @@
     <tr>
       <th>Name</th>
       <th>Gender</th>
-      <th>Birth</th>
     </tr>
   </thead>
   <tbody>
@@ -11,7 +10,6 @@
       <tr>
         <th><%= user.name %></th>
         <th><%= user.gender %></th>
-        <th><%= user.birth %></th>
       </tr>
     <% end %>
   </tbody>
