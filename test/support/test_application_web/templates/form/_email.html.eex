@@ -1,0 +1,7 @@
+<div id="user-form-email">
+  <%= if get_field(@form.source, :has_email?) do %>
+    <%= label @form, :email %>
+    <%= email_input @form, :email %>
+    <%= error_tag @form, :email %>
+  <% end %>
+</div>
