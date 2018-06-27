@@ -16,7 +16,13 @@ defmodule Frankt.TestApplication.People do
   end
 
   defp filter_by_name(users, %{"name" => name}) when name != "" do
-    Enum.filter(users, &String.contains?(&1.name, name))
+    downcased_name = String.downcase(name)
+
+    Enum.filter(users, fn user ->
+      user.name
+      |> String.downcase()
+      |> String.contains?(downcased_name)
+    end)
   end
 
   defp filter_by_name(users, _), do: users
