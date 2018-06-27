@@ -6,13 +6,13 @@
 use Mix.Config
 
 config :frankt,
-  namespace: Frankt.TestApplication
+  namespace: Frankt.TestApplicationWeb
 
 # Configures the endpoint
-config :frankt, Frankt.TestApplication.Endpoint,
+config :frankt, Frankt.TestApplicationWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "cOybsz5VQM1ZWOIbRkiuWQ3Aj2D/XqFe7CUgUqUzs3gCff+zDCeoeydxqYCIOD6V",
-  render_errors: [view: Frankt.TestApplication.ErrorView, accepts: ~w(html json)],
+  render_errors: [view: Frankt.TestApplicationWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: TestApplication.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger

@@ -8,8 +8,8 @@ const autoprefixer = require('autoprefixer');
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const source_path = path.join(__dirname, 'test', 'support', 'test_application', 'assets');
-const output_path = path.join(__dirname, 'test', 'support', 'test_application', 'priv', 'static');
+const source_path = path.join(__dirname, 'test', 'support', 'test_application_web', 'assets');
+const output_path = path.join(__dirname, 'test', 'support', 'test_application_web', 'priv', 'static');
 
 const plugins = [
   new MiniCssExtractPlugin({

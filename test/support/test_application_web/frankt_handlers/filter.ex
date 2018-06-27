@@ -1,8 +1,8 @@
-defmodule Frankt.TestApplication.FranktHandlers.Filter do
+defmodule Frankt.TestApplicationWeb.FranktHandlers.Filter do
   import Phoenix.Channel
   import Frankt.Handler
 
-  alias Frankt.TestApplication.FilterView, as: View
+  alias Frankt.TestApplicationWeb.FilterView, as: View
 
   def filter(%{"filters" => filters}, socket) do
     push(socket, "replace_with", %{
@@ -13,7 +13,7 @@ defmodule Frankt.TestApplication.FranktHandlers.Filter do
 
   # TODO this would be better refactored to its own module
   defp filter_users(filters) do
-    Frankt.TestApplication.FilterController.users()
+    Frankt.TestApplicationWeb.FilterController.users()
     |> filter_by_name(filters)
     |> filter_by_gender(filters)
   end

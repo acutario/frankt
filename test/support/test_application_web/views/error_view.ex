@@ -1,5 +1,5 @@
-defmodule Frankt.TestApplication.ErrorView do
-  use Frankt.TestApplication, :view
+defmodule Frankt.TestApplicationWeb.ErrorView do
+  use Frankt.TestApplicationWeb, :view
 
   # If you want to customize a particular status code
   # for a certain format, you may uncomment below.

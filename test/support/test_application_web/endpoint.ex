@@ -1,7 +1,7 @@
-defmodule Frankt.TestApplication.Endpoint do
+defmodule Frankt.TestApplicationWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :frankt
 
-  socket("/socket", Frankt.TestApplication.UserSocket)
+  socket("/socket", Frankt.TestApplicationWeb.UserSocket)
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -10,7 +10,7 @@ defmodule Frankt.TestApplication.Endpoint do
   plug(
     Plug.Static,
     at: "/",
-    from: "test/support/test_application/priv/static",
+    from: "test/support/test_application_web/priv/static",
     gzip: false,
     only: ~w(css fonts images js favicon.ico robots.txt)
   )
@@ -45,7 +45,7 @@ defmodule Frankt.TestApplication.Endpoint do
     signing_salt: "oekkiFiz"
   )
 
-  plug(Frankt.TestApplication.Router)
+  plug(Frankt.TestApplicationWeb.Router)
 
   @doc """
   Callback invoked for dynamically configuring the endpoint.

@@ -1,4 +1,4 @@
-defmodule Frankt.TestApplication.Gettext do
+defmodule Frankt.TestApplicationWeb.Gettext do
   @moduledoc """
   A module providing Internationalization with a gettext-based API.
 

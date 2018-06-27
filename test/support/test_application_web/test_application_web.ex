@@ -1,12 +1,12 @@
-defmodule Frankt.TestApplication do
+defmodule Frankt.TestApplicationWeb do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, views, channels and so on.
 
   This can be used in your application as:
 
-      use Frankt.TestApplication, :controller
-      use Frankt.TestApplication, :view
+      use Frankt.TestApplicationWeb, :controller
+      use Frankt.TestApplicationWeb, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -19,18 +19,18 @@ defmodule Frankt.TestApplication do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: Frankt.TestApplication
+      use Phoenix.Controller, namespace: Frankt.TestApplicationWeb
       import Plug.Conn
-      import Frankt.TestApplication.Router.Helpers
-      import Frankt.TestApplication.Gettext
+      import Frankt.TestApplicationWeb.Router.Helpers
+      import Frankt.TestApplicationWeb.Gettext
     end
   end
 
   def view do
     quote do
       use Phoenix.View,
-        root: "test/support/test_application/templates",
-        namespace: Frankt.TestApplication
+        root: "test/support/test_application_web/templates",
+        namespace: Frankt.TestApplicationWeb
 
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_flash: 2, view_module: 1]
@@ -38,9 +38,9 @@ defmodule Frankt.TestApplication do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import Frankt.TestApplication.Router.Helpers
-      import Frankt.TestApplication.ErrorHelpers
-      import Frankt.TestApplication.Gettext
+      import Frankt.TestApplicationWeb.Router.Helpers
+      import Frankt.TestApplicationWeb.ErrorHelpers
+      import Frankt.TestApplicationWeb.Gettext
     end
   end
 
@@ -55,7 +55,7 @@ defmodule Frankt.TestApplication do
   def channel do
     quote do
       use Phoenix.Channel
-      import Frankt.TestApplication.Gettext
+      import Frankt.TestApplicationWeb.Gettext
     end
   end
 

@@ -1,5 +1,5 @@
-defmodule Frankt.TestApplication.FilterView do
-  use Frankt.TestApplication, :view
+defmodule Frankt.TestApplicationWeb.FilterView do
+  use Frankt.TestApplicationWeb, :view
 
   @form_id "filter-form"
   @frankt_data [action: "filter:filter", target: "##{@form_id}", auto: true]

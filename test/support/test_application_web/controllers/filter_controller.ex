@@ -1,5 +1,5 @@
-defmodule Frankt.TestApplication.FilterController do
-  use Frankt.TestApplication, :controller
+defmodule Frankt.TestApplicationWeb.FilterController do
+  use Frankt.TestApplicationWeb, :controller
 
   @users [
     %{name: "Bret Slater", gender: "male", birth: "1947-06-02"},

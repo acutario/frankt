@@ -1,4 +1,4 @@
-defmodule Frankt.TestApplication.ErrorHelpers do
+defmodule Frankt.TestApplicationWeb.ErrorHelpers do
   @moduledoc """
   Conveniences for translating and building error messages.
   """
@@ -36,9 +36,9 @@ defmodule Frankt.TestApplication.ErrorHelpers do
     # should be written to the errors.po file. The :count option is
     # set by Ecto and indicates we should also apply plural rules.
     if count = opts[:count] do
-      Gettext.dngettext(Frankt.TestApplication.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(Frankt.TestApplicationWeb.Gettext, "errors", msg, msg, count, opts)
     else
-      Gettext.dgettext(Frankt.TestApplication.Gettext, "errors", msg, opts)
+      Gettext.dgettext(Frankt.TestApplicationWeb.Gettext, "errors", msg, opts)
     end
   end
 end

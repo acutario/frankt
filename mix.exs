@@ -29,13 +29,14 @@ defmodule Frankt.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:cowboy, "~> 1.0", only: [:dev, :test]},
-      {:credo, "~> 0.9.2", only: :dev},
-      {:ex_doc, "~> 0.18.1", only: :dev, runtime: false},
-      {:gettext, "~> 0.11", only: [:dev, :test]},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix, "~> 1.3.3"},
       {:phoenix_html, "~> 2.10"},
+      {:gettext, "~> 0.11", optional: true},
+      {:cowboy, "~> 1.0", only: [:dev, :test]},
+      {:credo, "~> 0.9.2", only: :dev},
+      {:ex_doc, "~> 0.18.1", only: :dev, runtime: false},
+      {:phoenix_ecto, "~> 3.3", only: [:dev, :test]},
       {:phoenix_live_reload, "~> 1.0", only: :dev}
     ]
   end

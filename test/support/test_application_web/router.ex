@@ -1,5 +1,5 @@
-defmodule Frankt.TestApplication.Router do
-  use Frankt.TestApplication, :router
+defmodule Frankt.TestApplicationWeb.Router do
+  use Frankt.TestApplicationWeb, :router
 
   pipeline :browser do
     plug(:accepts, ["html"])
@@ -13,7 +13,7 @@ defmodule Frankt.TestApplication.Router do
     plug(:accepts, ["json"])
   end
 
-  scope "/", Frankt.TestApplication do
+  scope "/", Frankt.TestApplicationWeb do
     # Use the default browser stack
     pipe_through(:browser)
 
@@ -22,7 +22,7 @@ defmodule Frankt.TestApplication.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", Frankt.TestApplication do
+  # scope "/api", Frankt.TestApplicationWeb do
   #   pipe_through :api
   # end
 end
