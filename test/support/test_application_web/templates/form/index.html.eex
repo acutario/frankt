@@ -1,0 +1,21 @@
+<%= form_for @changeset, form_path(@conn, :create), [id: "user-form"], fn f -> %>
+  <%= label f, :name %>
+  <%= text_input f, :name %>
+  <%= error_tag f, :name %>
+
+  <%= label f, :gender %>
+  <%= select f, :gender, gender_options() %>
+  <%= error_tag f, :gender %>
+
+  <%= label f, :has_email? %>
+  <%= checkbox f, :has_email?, data: [frankt: [action: "form:update", target: "#user-form", auto: true]] %>
+  <%= error_tag f, :has_email? %>
+
+  <%= if get_field(@changeset, :has_email?) do %>
+    <%= label f, :email %>
+    <%= email_input f, :email %>
+    <%= error_tag f, :email %>
+  <% end %>
+
+  <%= submit "Create user" %>
+<% end %>

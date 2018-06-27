@@ -7,7 +7,8 @@ defmodule Frankt.TestApplicationWeb.FranktChannel do
   def handlers do
     %{
       "greeting" => Frankt.TestApplicationWeb.FranktHandlers.Greeting,
-      "filter" => Frankt.TestApplicationWeb.FranktHandlers.Filter
+      "filter" => Frankt.TestApplicationWeb.FranktHandlers.Filter,
+      "form" => Frankt.TestApplicationWeb.FranktHandlers.Form
     }
   end
 end

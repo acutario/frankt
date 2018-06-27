@@ -5,7 +5,7 @@ defmodule Frankt.TestApplicationWeb.Router do
     plug(:accepts, ["html"])
     plug(:fetch_session)
     plug(:fetch_flash)
-    plug(:protect_from_forgery)
+    # plug(:protect_from_forgery)
     plug(:put_secure_browser_headers)
   end
 
@@ -19,6 +19,7 @@ defmodule Frankt.TestApplicationWeb.Router do
 
     get("/", PageController, :index)
     get("/filter", FilterController, :index)
+    resources("/form", FormController, only: [:index, :create])
   end
 
   # Other scopes may use custom stacks.
