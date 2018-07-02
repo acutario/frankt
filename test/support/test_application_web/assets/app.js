@@ -21,7 +21,8 @@ window.onload = function () {
       .receive("ok", (res) => {
         chat.insertAdjacentHTML('beforeend', '<p><i>Connected!</i></p>');
       });
-    frankt_chat.channel.on("new_msg", (res) => {
+
+    frankt_chat.channel.on("message", (res) => {
       chat.insertAdjacentHTML('beforeend', `<p><b>${res.sender}:</b> ${res.message}</p>`);
     });
   }

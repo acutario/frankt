@@ -1,8 +1,8 @@
 defmodule Frankt.TestApplicationWeb.FranktHandlers.Chat do
   alias Frankt.TestApplicationWeb.Endpoint
 
-  def chat(%{"sender" => sender, "message" => msg}, socket) do
-    Endpoint.broadcast("frankt:chat", "new_msg", %{
+  def send(%{"chat" => %{"sender" => sender, "message" => msg}}, socket) do
+    Endpoint.broadcast("chat:lobby", "message", %{
       sender: sender,
       message: msg
     })

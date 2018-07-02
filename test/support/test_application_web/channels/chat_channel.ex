@@ -9,7 +9,7 @@ defmodule Frankt.TestApplicationWeb.ChatChannel do
   end
 
   def handle_info(:welcome_message, socket) do
-    push(socket, "new_msg", %{
+    push(socket, "message", %{
       sender: gettext("Frankt"),
       message:
         gettext(
