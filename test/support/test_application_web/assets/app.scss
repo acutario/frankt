@@ -1,3 +1,11 @@
 html {
   background: #cfcfcf;
 }
+
+div.chat {
+  background-color: whitesmoke;
+  width: 600px;
+  height: 400px;
+  padding: 10px 20px;
+  overflow-y: scroll;
+}
