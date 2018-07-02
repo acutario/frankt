@@ -17,12 +17,12 @@ window.onload = function () {
 
   if (chat) {
     chat.insertAdjacentHTML('beforeend', '<p><i>Connecting...</i></p>');
-    var frankt_chat = Frankt.connect("chat:lobby", socket_params)
+    let chat_channel = Frankt.join("chat:lobby")
       .receive("ok", (res) => {
         chat.insertAdjacentHTML('beforeend', '<p><i>Connected!</i></p>');
       });
 
-    frankt_chat.channel.on("message", (res) => {
+    chat_channel.channel.on("message", (res) => {
       chat.insertAdjacentHTML('beforeend', `<p><b>${res.sender}:</b> ${res.message}</p>`);
     });
   }

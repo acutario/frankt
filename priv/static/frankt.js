@@ -5,7 +5,10 @@ import {
 
 export let channel = {};
 
-export function sendMsg(action, data) {
+export let socket = {};
+
+export function sendMsg(action, data, topic = channel.topic) {
+  const channel = socket.channels.filter(c => c.topic === topic)[0] || channel;
   return channel.push('frankt-action', {
     action: action,
     data: data
@@ -43,9 +46,10 @@ export function serializeForm(element) {
 function handleEvent(e, selector) {
   if (e.target.matches(selector) || e.target.closest(selector)) {
     const target = e.target.matches(selector) ? e.target : e.target.closest(selector);
+    const topic = e.target.dataset.franktTopic ? e.target.dataset.franktTopic : channel.topic
     e.preventDefault();
     const data = serializeForm(target);
-    if (data) sendMsg(target.dataset.franktAction, data);
+    if (data) sendMsg(target.dataset.franktAction, data, topic);
     return false;
   }
 }
@@ -71,7 +75,7 @@ function attachEvents() {
 
 // Connect to the socket and join the Frankt channel.
 export function connect(channel_name, socket_params) {
-  const socket = new Socket('/socket', {
+  socket = new Socket('/socket', {
     params: socket_params
   });
   socket.connect();
@@ -84,3 +88,8 @@ export function connect(channel_name, socket_params) {
     })
     .receive("error", res => console.log("Unable to connect to Frankt", res));
 };
+
+export function join(channel_name) {
+  let channel = socket.channel(channel_name, {});
+  return channel.join();
+}

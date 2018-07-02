@@ -8,5 +8,5 @@
   <div><%= text_input f, :sender %></div>
   <div><label>Message:</label></div>
   <div><%= text_input f, :message %></div>
-  <%= submit gettext("Send!"), data: [frankt: [action: "chat:send", target: "#chat-form"]] %>
+  <%= submit gettext("Send!"), data: [frankt: [action: "chat:send", target: "#chat-form", topic: "chat:lobby"]] %>
 <% end %>
