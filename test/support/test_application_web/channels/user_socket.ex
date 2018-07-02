@@ -2,6 +2,7 @@ defmodule Frankt.TestApplicationWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
+  channel("chat:lobby", Frankt.TestApplicationWeb.ChatChannel)
   channel("frankt:*", Frankt.TestApplicationWeb.FranktChannel)
 
   ## Transports

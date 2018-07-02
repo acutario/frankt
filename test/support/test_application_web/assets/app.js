@@ -13,10 +13,16 @@ window.onload = function () {
     });
 
   // Chat demo
-  const chat = document.querySelector("div.chat textarea");
+  const chat = document.querySelector("div.chat");
 
   if (chat) {
-    var frankt_chat = Frankt.connect("frankt:chat", socket_params)
-    frankt_chat.channel.on("new_msg", (res) => { alert("Message from " + res.sender + " : " + res.message); });
+    chat.insertAdjacentHTML('beforeend', '<p><i>Connecting...</i></p>');
+    var frankt_chat = Frankt.connect("chat:lobby", socket_params)
+      .receive("ok", (res) => {
+        chat.insertAdjacentHTML('beforeend', '<p><i>Connected!</i></p>');
+      });
+    frankt_chat.channel.on("new_msg", (res) => {
+      chat.insertAdjacentHTML('beforeend', `<p><b>${res.sender}:</b> ${res.message}</p>`);
+    });
   }
 }

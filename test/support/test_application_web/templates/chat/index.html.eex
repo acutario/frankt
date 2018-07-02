@@ -1,5 +1,4 @@
 <h1><%= gettext("Chat over Frankt") %></h1>
 
 <div class="chat">
-<p><b><%= gettext("Operator") %>:</b> <%= gettext("Welcome to Frankt example chat! As soon as someone connected write something it will appear here.") %></p>
 </div>
