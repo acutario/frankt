@@ -24,6 +24,7 @@ defmodule Frankt.TestApplicationWeb.Router do
     get("/", PageController, :index)
     get("/greet", GreetController, :index)
     get("/filter", FilterController, :index)
+    get("/chat", ChatController, :index)
     resources("/form", FormController, only: [:index, :create])
   end
 

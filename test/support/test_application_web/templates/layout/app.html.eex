@@ -24,6 +24,7 @@
           <%= link "Greeting", to: greet_path(@conn, :index) %>
           <%= link "Dynamic Form", to: form_path(@conn, :index) %>
           <%= link "Filtering a list", to: filter_path(@conn, :index) %>
+          <%= link "Chat", to: chat_path(@conn, :index) %>
         </nav>
 
         <%= render @view_module, @view_template, assigns %>
