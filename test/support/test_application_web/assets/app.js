@@ -11,4 +11,12 @@ window.onload = function () {
     .receive("ok", (res) => {
       console.log('do your magic!', res);
     });
+
+  // Chat demo
+  const chat = document.querySelector("div.chat textarea");
+
+  if (chat) {
+    var frankt_chat = Frankt.connect("frankt:chat", socket_params)
+    frankt_chat.channel.on("new_msg", (res) => { alert("Message from " + res.sender + " : " + res.message); });
+  }
 }
