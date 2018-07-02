@@ -2,3 +2,11 @@
 
 <div class="chat">
 </div>
+
+<%= form_for @conn, nil,  [id: "chat-form", as: :chat, csrf_token: false],  fn f -> %>
+  <div><label>Sender:</label></div>
+  <div><%= text_input f, :sender %></div>
+  <div><label>Message:</label></div>
+  <div><%= text_input f, :message %></div>
+  <%= submit "Send!", data: [frankt: [action: "chat:send", target: "#chat-form"]] %>
+<% end %>
