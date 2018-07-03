@@ -1,12 +1,15 @@
 <h1><%= gettext("Chat over Frankt") %></h1>
 
-<div class="chat">
+<div id="chat">
+  <%= render "_message.html", sender: "SYSTEM", message: "Connecting..." %>
 </div>
 
 <%= form_for @conn, nil,  [id: "chat-form", as: :chat, csrf_token: false],  fn f -> %>
-  <div><label>Sender:</label></div>
-  <div><%= text_input f, :sender %></div>
-  <div><label>Message:</label></div>
-  <div><%= text_input f, :message %></div>
-  <%= submit gettext("Send!"), data: [frankt: [action: "chat:send", target: "#chat-form", topic: "chat:lobby"]] %>
+  <%= label f, :sender %>
+  <%= text_input f, :sender %>
+
+  <%= label f, :message %>
+  <%= textarea f, :message %>
+
+  <%= submit "Send!", data: [frankt: [action: "chat:send", target: "#chat-form", topic: "chat:lobby"]] %>
 <% end %>
