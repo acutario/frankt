@@ -10,4 +10,11 @@ defmodule Frankt.TestApplicationWeb.FranktHandlers.Greeting do
       target: "#greeting"
     })
   end
+
+  def greet(_, socket) do
+    push(socket, "replace_with", %{
+      html: render(socket, View, "_greeting.html"),
+      target: "#greeting"
+    })
+  end
 end
