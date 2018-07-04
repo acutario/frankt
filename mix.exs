@@ -37,7 +37,8 @@ defmodule Frankt.Mixfile do
       {:credo, "~> 0.9.2", only: :dev},
       {:ex_doc, "~> 0.18.1", only: :dev, runtime: false},
       {:phoenix_ecto, "~> 3.3", only: [:dev, :test]},
-      {:phoenix_live_reload, "~> 1.0", only: :dev}
+      {:phoenix_live_reload, "~> 1.0", only: :dev},
+      {:phoenix_active_link, "~> 0.1.1", only: [:dev, :test]}
     ]
   end
 

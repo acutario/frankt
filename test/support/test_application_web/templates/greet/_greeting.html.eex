@@ -1,3 +1,7 @@
 <div id="greeting">
-  <%= if Map.get(assigns, :name), do: "Hello, #{assigns[:name]}" %>
+  <%= if Map.get(assigns, :name) do %>
+    <div class="notification">
+      <%= "Hello, #{assigns[:name]}" %>
+    </div>
+  <% end %>
 </div>

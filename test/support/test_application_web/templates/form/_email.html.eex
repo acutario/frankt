@@ -1,7 +1,15 @@
-<div id="user-form-email">
+<div id="user-form-email" class="field is-horizontal">
   <%= if get_field(@form.source, :has_email?) do %>
-    <%= label @form, :email %>
-    <%= email_input @form, :email %>
-    <%= error_tag @form, :email %>
+    <div class="field-label is-normal">
+      <%= label @form, :email, class: "label" %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= text_input @form, :email, class: "input" %>
+        </div>
+        <%= error_tag @form, :email %>
+      </div>
+    </div>
   <% end %>
 </div>

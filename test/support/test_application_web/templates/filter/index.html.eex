@@ -1,4 +1,30 @@
-<h1><%= gettext("Filtering a list") %></h1>
+<h1 class="title"><%= gettext("Filtering a list") %></h1>
 
-<%= filter_form(@conn) %>
+<% frankt_data = [action: "filter:filter", target: "#filter-form", auto: true] %>
+
+<% gender_options = [{"Male", :male}, {"Female", :female}, {"Other", :other}] %>
+
+<%= form_for @conn, nil, [id: "filter-form", as: :filters, csrf_token: false], fn form -> %>
+  <div class="field is-horizontal">
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= text_input form, :name,
+              placeholder: "Search by name...",
+              class: "input",
+              data: [frankt: frankt_data]
+          %>
+        </div>
+      </div>
+      <div class="field">
+        <div class="control">
+          <span class="select">
+            <%= select form, :gender, gender_options, prompt: "Any", data: [frankt: frankt_data] %>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
 <%= render "_table.html", assigns %>

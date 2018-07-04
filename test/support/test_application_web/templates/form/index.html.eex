@@ -1,25 +1,62 @@
-<h1><%= gettext("Dynamic Form") %></h1>
+<h1 class="title"><%= gettext("Dynamic Form") %></h1>
 
 <%= form_for @changeset, form_path(@conn, :create), [id: "user-form"], fn f -> %>
-  <div>
-    <%= label f, :name %>
-    <%= text_input f, :name %>
-    <%= error_tag f, :name %>
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= label f, :name, class: "label" %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= text_input f, :name, class: "input" %>
+        </div>
+        <%= error_tag f, :name %>
+      </div>
+    </div>
   </div>
 
-  <div>
-    <%= label f, :gender %>
-    <%= select f, :gender, gender_options() %>
-    <%= error_tag f, :gender %>
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= label f, :gender, class: "label" %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <span class="select">
+            <%= select f, :gender, gender_options() %>
+          </span>
+        </div>
+        <%= error_tag f, :gender %>
+      </div>
+    </div>
   </div>
 
-  <div>
-    <%= label f, :has_email? %>
-    <%= checkbox f, :has_email?, data: [frankt: [action: "form:update", target: "#user-form", auto: true]] %>
-    <%= error_tag f, :has_email? %>
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <%= label f, :has_email?, class: "label" %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <span class="checkbox">
+            <%= checkbox f, :has_email?, data: [frankt: [action: "form:update", target: "#user-form", auto: true]] %>
+          </span>
+        </div>
+        <%= error_tag f, :has_email? %>
+      </div>
+    </div>
   </div>
 
   <%= render "_email.html", Map.put(assigns, :form, f) %>
 
-  <%= submit "Create user" %>
+  <div class="field is-horizontal">
+    <div class="field-label is-normal"></div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+           <%= submit "Create user", class: "button is-primary" %>
+        </div>
+      </div>
+    </div>
+  </div>
 <% end %>

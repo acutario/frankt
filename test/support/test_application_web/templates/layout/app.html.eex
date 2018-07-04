@@ -9,28 +9,32 @@
     <%= frankt_channel @view_module, assigns %>
 
     <title>Hello TestApplication!</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css" />
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
   </head>
 
   <body>
-    <div class="container">
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+    <main role="main">
+      <nav role="main-nav" class="tabs is-centered">
+        <ul>
+          <%= active_link @conn, "Home", to: page_path(@conn, :index), wrap_tag: :li, class_active: "is-active" %>
+          <%= active_link @conn, "Greeting", to: greet_path(@conn, :index), wrap_tag: :li, class_active: "is-active" %>
+          <%= active_link @conn, "Dynamic Form", to: form_path(@conn, :index), wrap_tag: :li, class_active: "is-active" %>
+          <%= active_link @conn, "Filtering a list", to: filter_path(@conn, :index), wrap_tag: :li, class_active: "is-active" %>
+          <%= active_link @conn, "Chat", to: chat_path(@conn, :index), wrap_tag: :li, class_active: "is-active" %>
+        </ul>
+      </nav>
 
-      <main role="main">
+      <div class="container is-fluid">
+        <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+        <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+      </div>
 
-        <nav>
-          <%= link "Home", to: page_path(@conn, :index) %>
-          <%= link "Greeting", to: greet_path(@conn, :index) %>
-          <%= link "Dynamic Form", to: form_path(@conn, :index) %>
-          <%= link "Filtering a list", to: filter_path(@conn, :index) %>
-          <%= link "Chat", to: chat_path(@conn, :index) %>
-        </nav>
-
+      <div class="container is-fluid">
         <%= render @view_module, @view_template, assigns %>
-      </main>
+      </div>
+    </main>
 
-    </div> <!-- /container -->
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>

@@ -41,6 +41,7 @@ defmodule Frankt.TestApplicationWeb do
       import Frankt.TestApplicationWeb.Router.Helpers
       import Frankt.TestApplicationWeb.ErrorHelpers
       import Frankt.TestApplicationWeb.Gettext
+      import PhoenixActiveLink
     end
   end
 

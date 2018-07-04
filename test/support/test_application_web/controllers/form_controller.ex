@@ -9,7 +9,7 @@ defmodule Frankt.TestApplicationWeb.FormController do
 
   def create(conn, _params) do
     conn
-    |> put_flash(:info, "Thank youy for trying Frankt!")
+    |> put_flash(:info, "Thank you for trying Frankt!")
     |> redirect(to: form_path(conn, :index))
   end
 end

@@ -1,1 +1,2 @@
-<h1><%= gettext("Hi I'm frankt") %></h1>
+<h1 class="title"><%= gettext("Hi I'm frankt") %></h1>
+<h2 class="subtitle"><%= gettext("Try some demo to see what I'm capable of") %></h2>

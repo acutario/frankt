@@ -1,6 +1,7 @@
-<table id="users">
+<table id="users" class="table is-striped is-fullwidth">
   <thead>
     <tr>
+      <th>ID</th>
       <th>Name</th>
       <th>Gender</th>
     </tr>
@@ -8,8 +9,9 @@
   <tbody>
     <%= for user <- @users do %>
       <tr>
-        <th><%= user.name %></th>
-        <th><%= user.gender %></th>
+        <th><%= user.id %></th>
+        <td><%= user.name %></td>
+        <td><%= user.gender %></td>
       </tr>
     <% end %>
   </tbody>

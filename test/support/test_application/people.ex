@@ -2,11 +2,11 @@ defmodule Frankt.TestApplication.People do
   alias Frankt.TestApplication.People.User
 
   @users [
-    %User{name: "Bret Slater", gender: "male"},
-    %User{name: "Annamarie Herrera", gender: "female"},
-    %User{name: "Isabel Fry", gender: "female"},
-    %User{name: "Jamila Cohen", gender: "female"},
-    %User{name: "Blair Roy", gender: "male"}
+    %User{id: 1, name: "Bret Slater", gender: "male"},
+    %User{id: 2, name: "Annamarie Herrera", gender: "female"},
+    %User{id: 3, name: "Isabel Fry", gender: "female"},
+    %User{id: 4, name: "Jamila Cohen", gender: "female"},
+    %User{id: 5, name: "Blair Roy", gender: "male"}
   ]
 
   def filter_users(params \\ %{}) do
