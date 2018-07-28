@@ -100,13 +100,13 @@ defmodule Frankt do
   can be used to provide appropriate feedback in the client.
 
   If you want to customize how errors are handled, you can implement the `handle_error/3` callback.
-  The `handle_error/3` callback receives the rescued error, the socket and the params of the
+  The `handle_error/4` callback receives the rescued error, the socket and the params of the
   incoming message.
 
   The following example shows a very basic error handler that redirects to the index in case of
   any errors.
 
-      def handle_error(%Frankt.ConfigurationError{}, socket, _params) do
+      def handle_error(%Frankt.ConfigurationError{}, _stacktrace, socket, _params) do
         push(socket, "redirect", %{target: "/"})
         {:noreply, socket}
       end
@@ -126,7 +126,12 @@ defmodule Frankt do
 
   @callback handlers() :: %{required(String.t()) => module()}
   @callback gettext() :: module()
-  @callback handle_error(error :: Exception.t(), socket :: Phoenix.Socket.t(), params :: map()) ::
+  @callback handle_error(
+              error :: Exception.t(),
+              stacktrace :: list(),
+              socket :: Phoenix.Socket.t(),
+              params :: map()
+            ) ::
               {:noreply, Phoenix.Socket.t()}
               | {:reply, Phoenix.Channel.reply(), Phoenix.Socket.t()}
               | {:stop, reason :: term, Phoenix.Socket.t()}
@@ -145,10 +150,12 @@ defmodule Frankt do
         |> Frankt.__setup_action__(params, __MODULE__)
         |> Frankt.__run_pipeline__()
       rescue
-        error -> handle_error(error, socket, params)
+        error -> handle_error(error, System.stacktrace(), socket, params)
       end
 
-      def handle_error(error, socket, params), do: Frankt.__handle_error__(error, socket, params)
+      def handle_error(error, stacktrace, socket, params) do
+        Frankt.__handle_error__(error, stacktrace, socket, params)
+      end
 
       def gettext, do: nil
 
@@ -181,7 +188,7 @@ defmodule Frankt do
   def __run_plug__(module, socket), do: __run_plug__({module, nil}, socket)
 
   @doc false
-  def __handle_error__(error, socket, _params) do
+  def __handle_error__(error, stacktrace, socket, _params) do
     message =
       case error do
         %ConfigurationError{} -> "frankt-configuration-error"
