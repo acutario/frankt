@@ -188,7 +188,7 @@ defmodule Frankt do
   def __run_plug__(module, socket), do: __run_plug__({module, nil}, socket)
 
   @doc false
-  def __handle_error__(error, stacktrace, socket, _params) do
+  def __handle_error__(error, _stacktrace, socket, _params) do
     message =
       case error do
         %ConfigurationError{} -> "frankt-configuration-error"
