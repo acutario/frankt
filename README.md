@@ -5,6 +5,13 @@
 
 Frankt is a small package that allows you to run client side actions from your [Phoenix Framework][1] project.
 
+## ⚠ Frankt is now deprecated ⚠
+
+Frankt has worked great for us and solved a lot of problems, but it is not maintaned anymore and we don't recommend using it in production.
+
+Since we initially created Frankt, we have discovered better approaches to provide the same functionality.  
+- [Phoenix LiveView](https://github.com/phoenixframework/phoenix_live_view) fulfills the same role that Frankt did, and also works with websockets. But it is maintained and developed by the Phoenix creators and the entire Elixir community.
+- [Intercooler.js](https://github.com/bigskysoftware/intercooler-js) and [Unpoly](https://github.com/unpoly/unpoly) are minimal and stable libraries that can provide dynamism in the client while still using our beloved controllers. Those libraries can be used with any framework and language, so they have really strong communities behind them.
 
 ## How does it work?
 Contrary to other solutions Frankt only provides a thin layer over Phoenix channels. If you already know how Phoenix channels work, there are no new concpets to learn. **You can use your existing code**, you have access to your templates, business logic and any other resource of your application.
